@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Neurology Crossword Puzzler</title>
   <style>
-  .confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:10050}
-
     :root { color-scheme: light; }
     html, body { margin: 0; padding: 0; background: #ffffff; color: #111111; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
     .container { max-width: 1120px; margin: 0 auto; padding: 16px; }
@@ -167,63 +165,49 @@
     // ---------- Date & helpers ----------
     
     // Simple canvas confetti launcher
-    function startConfetti(){
-  if (window.__confettiCtl && window.__confettiCtl.running) return; // already running
-  const canvas = document.createElement('canvas');
-  canvas.className = 'confettiCanvas';
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width = window.innerWidth;
-  let H = canvas.height = window.innerHeight;
-  const onResize = ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
-  window.addEventListener('resize', onResize);
-  const colors = ['#E74C3C','#F1C40F','#2ECC71','#3498DB','#9B59B6','#E67E22'];
-  const N = 180;
-  const parts = Array.from({length:N}, (_,i)=> ({
-    x: Math.random()*W,
-    y: -10 - Math.random()*H*0.3,          // start above top
-    r: 2 + Math.random()*4,
-    vx: (Math.random()-0.5)*2,
-    vy: 2 + Math.random()*3,
-    c: colors[i % colors.length],
-    a: 0.9
-  }));
-  let running = true;
-  window.__confettiCtl = {
-    running: true,
-    stop(){
-      running = false;
-      this.running = false;
-      try { document.body.removeChild(canvas); } catch {}
-      window.removeEventListener('resize', onResize);
-      window.__confettiCtl = null;
-    }
-  };
-  function frame(){
-    if (!running) return;
-    ctx.clearRect(0,0,W,H);
-    for (const p of parts){
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.03; // gravity
-      if (p.y > H+10){ // recycle to top
-        p.y = -10;
-        p.vy = 2 + Math.random()*3;
-        p.x = Math.random()*W;
+    function launchConfetti(durationMs=2500){
+      const canvas = document.createElement('canvas');
+      canvas.className = 'confettiCanvas';
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      let W = canvas.width = window.innerWidth;
+      let H = canvas.height = window.innerHeight;
+      const onResize = ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
+      window.addEventListener('resize', onResize);
+      const colors = ['#E74C3C','#F1C40F','#2ECC71','#3498DB','#9B59B6','#E67E22'];
+      const N = 160;
+      const parts = Array.from({length:N}, (_,i)=> ({
+        x: Math.random()*W,
+        y: -10 - Math.random()*H*0.2,
+        r: 2 + Math.random()*4,
+        vx: (Math.random()-0.5)*2,
+        vy: 2 + Math.random()*3,
+        c: colors[i % colors.length],
+        a: 0.9
+      }));
+      let start;
+      function frame(t){
+        if (start===undefined) start = t;
+        const elapsed = t - start;
+        ctx.clearRect(0,0,W,H);
+        for (const p of parts){
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.03; // gravity
+          if (p.y > H+10){ p.y = -10; p.vy = 2 + Math.random()*3; p.x = Math.random()*W; }
+          ctx.globalAlpha = p.a;
+          ctx.fillStyle = p.c;
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+        }
+        if (elapsed < durationMs){
+          requestAnimationFrame(frame);
+        } else {
+          try { document.body.removeChild(canvas); } catch {}
+          window.removeEventListener('resize', onResize);
+        }
       }
-      ctx.globalAlpha = p.a;
-      ctx.fillStyle = p.c;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+      requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-function stopConfetti(){
-  if (window.__confettiCtl && window.__confettiCtl.stop){
-    window.__confettiCtl.stop();
-  }
-}
 function phoenixYYYYMMDD(date=new Date()){
       try{
         const parts = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Phoenix',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
@@ -644,11 +628,6 @@ function isStartAcrossCell(r,c,g){
       const [locked,setLocked]=useState(new Set());
       const [revealMode, setRevealMode] = useState(false);
       const [showCongrats, setShowCongrats] = useState(false);
-      useEffect(()=>{
-        if (showCongrats) startConfetti();
-        else stopConfetti();
-      }, [showCongrats]);
-
 
       const [showOptions, setShowOptions] = useState(false);
       const [seedInput, setSeedInput] = useState('');
@@ -809,7 +788,7 @@ function isStartAcrossCell(r,c,g){
         if (allPlacements.length && allPlacements.every(p => isPlacementCorrect(p, userGrid))){
           if (!showCongrats){
             setShowCongrats(true);
-            /* confetti starts via showCongrats effect */
+            launchConfetti(2600);
           }
         }
       }, [userGrid, across, down]);
@@ -901,7 +880,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
               <div className="modal" role="dialog" aria-modal="true" aria-label="Options">
                 <h3>Options</h3>
                 <div className="row" style={{alignItems:'center', gap:'12px'}}>
-  <strong>Swag:</strong>
+  <strong>Size:</strong>
   <div style={{display:'flex', flexDirection:'column', flex:1}}>
     <input type="range" min={0} max={14} step={1}
            value={ sizeLevel }

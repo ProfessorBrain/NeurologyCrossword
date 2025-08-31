@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Neurology Crossword Puzzler</title>
   <style>
-  .confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:10050}
-
     :root { color-scheme: light; }
     html, body { margin: 0; padding: 0; background: #ffffff; color: #111111; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
     .container { max-width: 1120px; margin: 0 auto; padding: 16px; }
@@ -14,7 +12,6 @@
     .gridwrap { padding: 8px; display: flex; justify-content: center; align-items: center; width: 100%; box-sizing: border-box; }
     .cluecard { padding: 6px; }
     .title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-family: "Courier New", Courier, monospace; }
-    .reveal-cursor, .reveal-cursor * { cursor: help !important; }
     .two { display: grid; grid-template-columns: minmax(260px,1fr) minmax(260px,360px); gap: 24px; align-items: start; }
     .cells { display: grid; gap: 0; margin: 0 auto; max-width: 100%; }
     .cell { position: relative; user-select: none; box-sizing: border-box; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; }
@@ -31,7 +28,7 @@
     .btn:hover { background:#f5f5f5; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
     .btn.reveal { background:#f5f3ff; border-color:#7c3aed; }
     .btn.reveal:hover { background:#ede9fe; }
-    .credit { padding-top: 8px; font-size: 12px; opacity: .7; text-align: center;  display:block; width:100%;}
+    .credit { display:block; width:100%; padding-top: 8px; font-size: 12px; opacity: .7;   text-align:center; }
     .hint { font-size: 12px; color:#4c1d95; padding-left:8px; }
     .error { color:#b91c1c; font-weight:600; }
     #errOverlay { position: fixed; inset: 0; background: rgba(255,255,255,.96); color:#111; padding: 16px; z-index: 99999; display:none; }
@@ -43,7 +40,7 @@
     .clue-text { flex: 1; }
     /* Modal */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index: 10000; }
-    .modal { background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+    .modal { font-family: 'Courier New', Courier, monospace; background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
     .modal h3 { margin: 0 0 8px 0; font-size:18px; }
     .modal .row { display:flex; gap:10px; align-items:center; padding:8px 0; }
     .modal .slider{ width:100%; }
@@ -81,7 +78,6 @@
     
     .btn.reveal.active { box-shadow: 0 0 0 2px #7c3aed inset; }
   .btn, .btnrow button, button { font-family: 'Courier New', Courier, monospace; }
-  .modal{ font-family: 'Courier New', Courier, monospace; }
 </style>
 </head>
 <body>
@@ -155,7 +151,25 @@
         let cancelled=false;
         fetch('crosswordclues.csv')
           .then(r=>{ if (!r.ok) throw new Error('CSV not found'); return r.text(); })
-          .then(txt=>{ if (cancelled) return; const parsed=parseCSVTwoCols(txt); if (parsed.length){ setBank(parsed.map(x=>({answer:x.answer.replace(/[^A-Z]/g,"").toUpperCase(), clue:x.clue}))); } else { setError('CSV parsed but no valid rows.'); }
+          .then(txt=>{
+            if (cancelled) return;
+            const lines = txt.split(/\r\n|\n|\r/).filter(Boolean);
+            const rows = [];
+            for (let raw of lines){
+              let line = raw.trim();
+              if (!line) continue;
+              const idx = line.indexOf(',');
+              if (idx === -1) continue;
+              let ans = line.slice(0, idx).trim();
+              let clue = line.slice(idx+1).trim();
+              if (ans.startsWith('"') && ans.endsWith('"')) ans = ans.slice(1,-1);
+              if (clue.startsWith('"') && clue.endsWith('"')) clue = clue.slice(1,-1);
+              const answer = ans.replace(/[^A-Za-z]/g,'').toUpperCase();
+              if (!answer) continue;
+              rows.push({answer, clue});
+            }
+            if (rows.length === 0) throw new Error('CSV parsed but no valid rows.');
+            setBank(rows);
           })
           .catch(e=>{ if (!cancelled){ setError((e && e.message) ? e.message : 'Failed to load crosswordclues.csv'); } })
           .finally(()=>{ if (!cancelled) setLoading(false); });
@@ -165,66 +179,7 @@
     }
 
     // ---------- Date & helpers ----------
-    
-    // Simple canvas confetti launcher
-    function startConfetti(){
-  if (window.__confettiCtl && window.__confettiCtl.running) return; // already running
-  const canvas = document.createElement('canvas');
-  canvas.className = 'confettiCanvas';
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  let W = canvas.width = window.innerWidth;
-  let H = canvas.height = window.innerHeight;
-  const onResize = ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; };
-  window.addEventListener('resize', onResize);
-  const colors = ['#E74C3C','#F1C40F','#2ECC71','#3498DB','#9B59B6','#E67E22'];
-  const N = 180;
-  const parts = Array.from({length:N}, (_,i)=> ({
-    x: Math.random()*W,
-    y: -10 - Math.random()*H*0.3,          // start above top
-    r: 2 + Math.random()*4,
-    vx: (Math.random()-0.5)*2,
-    vy: 2 + Math.random()*3,
-    c: colors[i % colors.length],
-    a: 0.9
-  }));
-  let running = true;
-  window.__confettiCtl = {
-    running: true,
-    stop(){
-      running = false;
-      this.running = false;
-      try { document.body.removeChild(canvas); } catch {}
-      window.removeEventListener('resize', onResize);
-      window.__confettiCtl = null;
-    }
-  };
-  function frame(){
-    if (!running) return;
-    ctx.clearRect(0,0,W,H);
-    for (const p of parts){
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.03; // gravity
-      if (p.y > H+10){ // recycle to top
-        p.y = -10;
-        p.vy = 2 + Math.random()*3;
-        p.x = Math.random()*W;
-      }
-      ctx.globalAlpha = p.a;
-      ctx.fillStyle = p.c;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-    }
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-}
-function stopConfetti(){
-  if (window.__confettiCtl && window.__confettiCtl.stop){
-    window.__confettiCtl.stop();
-  }
-}
-function phoenixYYYYMMDD(date=new Date()){
+    function phoenixYYYYMMDD(date=new Date()){
       try{
         const parts = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Phoenix',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
         var y=null,m=null,d=null;
@@ -239,15 +194,19 @@ function phoenixYYYYMMDD(date=new Date()){
       medium: { base: 21, maxLen: 14, maxClues: 16, minPlaced: 10 },
       large: { base: 31, maxLen: 35, maxClues: 20, minPlaced: 12 }
     };
+
     // Map size level (0..14) or legacy 'small'|'medium'|'large' to preset values
     function presetFor(levelOrOpt){
-      const LEGACY = SIZE_PRESETS;
+      const LEGACY = { small: { base: 15, maxLen: 8, maxClues: 10, minPlaced: 6 },
+                       medium:{ base: 21, maxLen: 14, maxClues: 16, minPlaced: 10 },
+                       large: { base: 31, maxLen: 35, maxClues: 20, minPlaced: 12 } };
       if (typeof levelOrOpt === 'string'){
         return LEGACY[levelOrOpt] || LEGACY.medium;
       }
       let lvl = Number(levelOrOpt);
       if (!isFinite(lvl)) lvl = 7;
       lvl = Math.max(0, Math.min(14, Math.round(lvl)));
+      // Linear maps (inclusive): grid 13..35, maxLen 8..35, maxClues 10..20, minPlaced 6..12
       const lerp = (a,b,t)=> a + (b-a)*t;
       const t = lvl/14;
       const base   = Math.round(lerp(13, 35, t));
@@ -258,8 +217,8 @@ function phoenixYYYYMMDD(date=new Date()){
     }
 
 
-    function computeGridSize(words, sizeOrPreset){
-      const preset = (typeof sizeOrPreset==='string' ? (SIZE_PRESETS[sizeOrPreset]||SIZE_PRESETS.medium) : (sizeOrPreset||SIZE_PRESETS.medium));
+    function computeGridSize(words, presetIn){
+      const preset = presetIn || {base:21};
       const MAX=35, MIN=13; const longest=Math.max(3, ...words.map(w=>w.answer.length));
       let size=Math.max(preset.base, longest+2);
       size=Math.min(MAX, Math.max(MIN,size));
@@ -305,57 +264,30 @@ function phoenixYYYYMMDD(date=new Date()){
         return nn;
       });
     }
-        function isPlacementFilled(p, user){
-      if (!p || !Array.isArray(user) || user.length===0) return false;
-      const H = user.length;
-      const W = Array.isArray(user[0]) ? user[0].length : 0;
-      if (p.dir===DIRS.ACROSS){
-        const r=p.row;
-        if (r<0||r>=H) return false;
-        for (let c=p.col;c<p.col+(p.answer?p.answer.length:0);c++){
-          if (c<0||c>=W) return false;
-          if (!user[r] || !user[r][c]) return false;
-        }
-      } else {
-        const c=p.col;
-        if (c<0||c>=W) return false;
-        for (let r=p.row;r<p.row+(p.answer?p.answer.length:0);r++){
-          if (r<0||r>=H) return false;
-          if (!user[r] || !user[r][c]) return false;
-        }
-      }
-      return true;
-    }
-    
-      
-function isPlacementCorrect(p, user){
+        
+function isPlacementFilled(p, user){
   if (!p || !Array.isArray(user) || user.length===0) return false;
   const H = user.length;
   const W = Array.isArray(user[0]) ? user[0].length : 0;
-  const ans = (p && p.answer ? String(p.answer).toUpperCase() : "");
-  if (!ans) return false;
   if (p.dir===DIRS.ACROSS){
     const r = p.row;
     if (r<0 || r>=H) return false;
-    for (let i=0; i<ans.length; i++){
-      const c = p.col + i;
+    for (let c=p.col; c<p.col+p.answer.length; c++){
       if (c<0 || c>=W) return false;
-      const ch = (user[r] && user[r][c]) ? String(user[r][c]).toUpperCase() : '';
-      if (ch !== ans[i]) return false;
+      if (!user[r] || !user[r][c]) return false;
     }
   } else {
     const c = p.col;
     if (c<0 || c>=W) return false;
-    for (let i=0; i<ans.length; i++){
-      const r = p.row + i;
+    for (let r=p.row; r<p.row+p.answer.length; r++){
       if (r<0 || r>=H) return false;
-      const ch = (user[r] && user[r][c]) ? String(user[r][c]).toUpperCase() : '';
-      if (ch !== ans[i]) return false;
+      if (!user[r] || !user[r][c]) return false;
     }
   }
   return true;
 }
-function isStartAcrossCell(r,c,g){
+
+      function isStartAcrossCell(r,c,g){
       const size=g.length;
       if (r<0||c<0||r>=size||c>=size) return false;
       if (g[r][c]===null) return false;
@@ -548,8 +480,8 @@ function isStartAcrossCell(r,c,g){
       return { grid, placements, numbers, bounds:{minR,maxR,minC,maxC} };
     }
 
-    function pickDailyWords(bank, rng, sizeOrPreset){
-      const preset = (typeof sizeOrPreset==='string' ? (SIZE_PRESETS[sizeOrPreset]||SIZE_PRESETS.medium) : (sizeOrPreset||SIZE_PRESETS.medium));
+    function pickDailyWords(bank, rng, presetIn){
+      const preset = presetIn || {base:21};
       const pool=bank.slice().filter(x=>x.answer.length>=3 && x.answer.length<=preset.maxLen);
       pool.sort((a,b)=>Math.abs(a.answer.length-7)-Math.abs(b.answer.length-7));
       shuffleInPlace(pool,rng);
@@ -643,13 +575,6 @@ function isStartAcrossCell(r,c,g){
       const [dir,setDir]=useState(DIRS.ACROSS);
       const [locked,setLocked]=useState(new Set());
       const [revealMode, setRevealMode] = useState(false);
-      const [showCongrats, setShowCongrats] = useState(false);
-      useEffect(()=>{
-        if (showCongrats) startConfetti();
-        else stopConfetti();
-      }, [showCongrats]);
-
-
       const [showOptions, setShowOptions] = useState(false);
       const [seedInput, setSeedInput] = useState('');
       const [revealed, setRevealed] = useState(new Set());
@@ -802,18 +727,7 @@ function isStartAcrossCell(r,c,g){
       const across=useMemo(()=>placements.filter(p=>p.dir===DIRS.ACROSS).slice().sort((a,b)=>a.number-b.number),[placements]);
       const down=useMemo(()=>placements.filter(p=>p.dir===DIRS.DOWN).slice().sort((a,b)=>a.number-b.number),[placements]);
 
-      
-      // Trigger congrats when puzzle fully solved
-      useEffect(()=>{
-        const allPlacements = (across || []).concat(down || []);
-        if (allPlacements.length && allPlacements.every(p => isPlacementCorrect(p, userGrid))){
-          if (!showCongrats){
-            setShowCongrats(true);
-            /* confetti starts via showCongrats effect */
-          }
-        }
-      }, [userGrid, across, down]);
-function renderCells(){
+      function renderCells(){
         const items=[];
         const R = bounds.maxR - bounds.minR + 1;
         const C = bounds.maxC - bounds.minC + 1;
@@ -901,7 +815,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
               <div className="modal" role="dialog" aria-modal="true" aria-label="Options">
                 <h3>Options</h3>
                 <div className="row" style={{alignItems:'center', gap:'12px'}}>
-  <strong>Swag:</strong>
+  <strong style={{minWidth:'48px'}}>Size:</strong>
   <div style={{display:'flex', flexDirection:'column', flex:1}}>
     <input type="range" min={0} max={14} step={1}
            value={ sizeLevel }
@@ -942,7 +856,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
               <p style={{marginTop:'8px'}}>Place a 2-column <code>crosswordclues.csv</code> (Answer, Clue) next to this HTML and refresh. If you opened this file with <code>file://</code>, run a local server (e.g., <code>python -m http.server</code>).</p>
             </div>
           ) : (
-            <div className={"two" + (revealMode ? " reveal-cursor" : "")}>
+            <div className="two">
               <div>
                 <div className="card" className="card sticky-grid">
                   <div className="gridwrap" ref={wrapRef}>
@@ -963,7 +877,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                       const isSel = selectedPlacement && p.number===selectedPlacement.number && p.dir===selectedPlacement.dir;
                       return (
                         <li key={'A-'+p.number+'-'+p.answer}
-                            className={'clue' + (isSel ? ' selected' : '') + (isPlacementCorrect(p, userGrid) ? ' done' : '')}
+                            className={'clue' + (isSel ? ' selected' : '') + (isPlacementFilled(p, userGrid) ? ' done' : '')}
                             onClick={()=>{ if (revealMode) { revealPlacement(p, grid, setUserGrid, setRevealed); setRevealMode(false);} else { setDir(p.dir); setActive({r:p.row, c:p.col}); } }}>
                           <span className="clue-num">{p.number}</span>
                           <span className="clue-text">{p.clue}</span>
@@ -979,7 +893,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                       const isSel = selectedPlacement && p.number===selectedPlacement.number && p.dir===selectedPlacement.dir;
                       return (
                         <li key={'D-'+p.number+'-'+p.answer}
-                            className={'clue' + (isSel ? ' selected' : '') + (isPlacementCorrect(p, userGrid) ? ' done' : '')}
+                            className={'clue' + (isSel ? ' selected' : '') + (isPlacementFilled(p, userGrid) ? ' done' : '')}
                             onClick={()=>{ if (revealMode) { revealPlacement(p, grid, setUserGrid, setRevealed); setRevealMode(false);} else { setDir(p.dir); setActive({r:p.row, c:p.col}); } }}>
                           <span className="clue-num">{p.number}</span>
                           <span className="clue-text">{p.clue}</span>
@@ -993,20 +907,8 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                   <button id="revealBtn" className={'btn reveal' + (revealMode ? ' active' : '')} onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
                   <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New Puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
-                
-          {showCongrats && (
-            <div className="overlay" style={{zIndex:9998}}>
-              <div className="modal" role="dialog" aria-modal="true">
-                <h3>Congratulations!</h3>
-                <p>You solved the puzzle. 🎉</p>
-                <div className="actions">
-                  <button className="btn" onClick={()=>setShowCongrats(false)}>Close</button>
                 </div>
-              </div>
-            </div>
-          )}
-</div>
-                <div className="credit">created by micah etter, md</div>
+                <div className="credit" style={{marginTop:'6px', }}>created by micah etter, md</div>
               </div>
 </div>
           )}
