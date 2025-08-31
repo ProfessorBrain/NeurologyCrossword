@@ -166,9 +166,6 @@ TRANSVERSEMYELITIS,Subacute spinal cord inflammation causing sensory level and w
 ACUTEDISSEMINATEDENCEPHALOMYELITIS,Postinfectious demyelination in children
 BICKERSTAFFENCEPHALITIS,Brainstem encephalitis with ataxia and ophthalmoplegia
 ANTINMDARECEPTOR,Autoimmune encephalitis with psychiatric symptoms and dyskinesias
-LGI1ENCEPHALITIS,Faciobrachial dystonic seizures with hyponatremia
-CASPR2ENCEPHALITIS,Autoimmune limbic encephalitis with peripheral nerve hyperexcitability
-GAD65ENCEPHALITIS,Autoimmune epilepsy; may cause limbic encephalitis
 STIFFPERSONSYNDROME,GAD antibodies with axial rigidity and spasms
 OPSOCLONUSMYOCLONUS,Chaotic saccades with myoclonus and ataxia
 INFANTILESPASMS,West syndrome with hypsarrhythmia on EEG
@@ -354,8 +351,7 @@ GLASGOWCOMASCALE,"Eye, verbal, motor score for consciousness assessment"
 FOURSCORE,Alternative coma scale including brainstem and respiration
 HUNTANDHESS,Subarachnoid hemorrhage clinical grading scale
 FISHERSCALE,CT blood grading for SAH vasospasm risk
-ABCD2,TIA risk stratification score
-CHA2DS2VASC,Atrial fibrillation stroke risk score
+CHADSVASC,Atrial fibrillation stroke risk score
 HASBLED,Bleeding risk score in anticoagulation
 ROMBERG,Sway with eyes closed indicates proprioceptive loss
 HOFFMANNSIGN,Finger flexion with flicking nail suggests UMN lesion
@@ -381,16 +377,11 @@ ELECTROMYOGRAPHY,Needle exam of muscle to assess denervation and MUAPs
 SINGLEFIBEREMG,Highly sensitive test for neuromuscular junction disorders
 EVOKEDPOTENTIALS,Electrical responses to sensory stimulation for pathway integrity
 AUTONOMICTESTING,"QSART, tilt table, Valsalva for dysautonomia"
-C9ORF72,Repeat expansion causing ALS/FTD spectrum
-SOD1,Superoxide dismutase gene mutated in familial ALS
 HTT,Huntingtin gene with CAG expansion
-PMP22,Gene duplicated in CMT1A
 GAA,Trinucleotide repeat causing Friedreich ataxia
-NOTCH3,Gene mutated in CADASIL small vessel disease
 GFAP,Astrocytic intermediate filament; Alexander disease
 ARSA,Deficiency in metachromatic leukodystrophy
 GALC,Deficiency in Krabbe disease
-ABCD1,Adrenoleukodystrophy peroxisomal transporter
 POLG,Mitochondrial polymerase mutations causing epilepsy and ataxia
 TTR,Transthyretin gene in amyloid neuropathy
 RADICULOPATHY,Dermatomal pain and weakness from nerve root compression
@@ -410,14 +401,6 @@ CHADDOCKSIGN,Alternative plantar reflex elicitation method
 NEGLECT,Inattention to the side of space
 FACIALPALSY,Lower motor neuron facial weakness on the
 PRONATORDRIFT,Arm pronates and drifts on the indicating UMN lesion
-CRANIALNERVE3PALSY,"Deficit with ptosis, 'down and out' eye, and mydriasis"
-CRANIALNERVE4PALSY,Deficit with vertical diplopia worse on down gaze
-CRANIALNERVE6PALSY,Deficit with horizontal diplopia from impaired abduction
-CRANIALNERVE7PALSY,Deficit with facial weakness and loss of taste anterior two-thirds
-CRANIALNERVE9PALSY,Deficit with loss of gag and posterior third taste disturbance
-CRANIALNERVE10PALSY,Deficit with dysphonia and impaired palate elevation
-CRANIALNERVE12PALSY,Deficit with tongue deviation toward lesion on protrusion
-DOWNBEATNYSTAGMUS,Fast phase downward; cervicomedullary junction localization
 OPSOCLONUS,Chaotic multidirectional saccades without intersaccadic intervals
 BACLOFEN,GABA-B agonist used for spasticity
 TIZANIDINE,Alpha-2 agonist for spasticity
@@ -470,10 +453,7 @@ SYMBOLDIGITMODALITIES,Processing speed test used in MS
 ANTIHU,ANNA-1 antibody causing sensory neuronopathy and encephalomyelitis
 ANTIYO,PCA-1 antibody associated with paraneoplastic cerebellar degeneration
 ANTIRI,ANNA-2 antibody with opsoclonus-myoclonus and ataxia
-ANTIMA2,Antibody associated with limbic and diencephalic encephalitis in testicular cancer
-ANTICRMP5,Collapsin response mediator protein 5 antibody with neuropathy/encephalitis
 AMPHIPHYSINANTIBODY,Paraneoplastic stiff-person syndrome antibody
-IGLON5DISEASE,Sleep disorder with brainstem tauopathy and anti-IgLON5 antibodies
 DPPXENCEPHALITIS,Antibody-mediated hyperexcitability with diarrhea and weight loss
 GABABENCEPHALITIS,Limbic encephalitis with seizures; small-cell lung cancer association
 AMPARECEPTORENCEPHALITIS,Limbic encephalitis with memory loss and seizures
@@ -532,7 +512,6 @@ BUNINABODIES,Eosinophilic inclusions in motor neurons in ALS
 NEGRIBODY,Cytoplasmic inclusion in rabies infection
 ROSENTHALFIBERS,Eosinophilic astrocytic inclusions in pilocytic astrocytoma
 LAFORABODY,Polyglucosan inclusion in progressive myoclonus epilepsy
-TDP43,Proteinopathy in ALS and FTLD
 HOLOPROSENCEPHALY,Failure of forebrain cleavage with midline facial anomalies
 DANDYWALKERMALFORMATION,Posterior fossa cyst with vermian hypoplasia
 CHIARIIMALFORMATION,Cerebellar tonsillar ectopia below foramen magnum
@@ -545,8 +524,6 @@ AUTONOMICDYSREFLEXIA,Paroxysmal hypertension with high-level spinal cord lesions
 ANTERIORSPINALARTERY,Midline vessel supplying anterior two-thirds of cord
 POSTERIORSPINALARTERY,Paired vessels supplying dorsal columns
 ARTERYOFADAMKIEWICZ,Major radicular artery feeding thoracolumbar cord
-EWALDLAWS,Describe eye and head movement responses to semicircular canal stimulation
-OTOLITHORGANS,Utricle and saccule detect linear acceleration and gravity
 BENIGNPAROXYSMALPOSITIONALVERTIGO,Episodic vertigo triggered by head position change
 HORIZONTALCANALBPPV,Geotropic or apogeotropic nystagmus on supine roll test
 HEADTHRUSTTEST,Corrective saccade for peripheral vestibulopathy
@@ -586,12 +563,6 @@ NUCLEUSSOLITARIUS,Visceral sensory nucleus for taste and baroreception
 EDINGERWESTPHALNUCLEUS,Parasympathetic preganglionic nucleus of CN III
 DORSALMOTORNUCLEUSOFVAGUS,Parasympathetic output to thoracoabdominal viscera
 FACIALCOLLICULUS,Pons floor bump from CN VII fibers looping around CN VI nucleus
-KCNQ2,Neonatal epileptic encephalopathy due to potassium channel mutation
-SCN8A,Sodium channel-related developmental epileptic encephalopathy
-KCNT1,Epilepsy of infancy with migrating focal seizures gene
-CACNA1,Channelopathy causing EA2 and hemiplegic migraine
-ATP1A3,Alternating hemiplegia of childhood and rapid-onset dystonia-parkinsonism gene
-SLC2A1,GLUT1 deficiency causing seizures and movement disorder
 AMAN,Acute motor axonal neuropathy variant of Guillain-BarrÃ©
 AMSAN,Acute motor-sensory axonal neuropathy variant of GBS
 POEMS,"Polyneuropathy with organomegaly, endocrinopathy, M protein, skin changes"
@@ -630,7 +601,6 @@ PLEDS,Periodic lateralized epileptiform discharges on EEG
 GPEDS,Generalized periodic epileptiform discharges
 BURSTSUPPRESSION,Alternating high-voltage bursts and flat intervals on EEG
 TRIPHASICWAVES,EEG pattern seen in metabolic encephalopathy
-3HZSPIKEANDWAVE,Classic absence seizure EEG pattern
 HYPSARRHYTHMIA,Chaotic high-amplitude pattern in infantile spasms
 GAMMAKNIFE,Stereotactic radiosurgery device using cobalt-60 beams
 CYBERKNIFE,Robotic stereotactic radiotherapy system
@@ -733,7 +703,7 @@ SUPERREFRACTORYSTATUSEPILEPTICUS,Seizures persist beyond 24 hours despite anesth
 NORSE,New-onset refractory status epilepticus of unclear etiology
 FIRES,Febrile infection-related epilepsy syndrome
 ACUTEFLACCIDMYELITIS,Poliomyelitis-like illness with anterior horn cell involvement
-IGG4PACHYMENINGITIS,Hypertrophic dura from IgG4-related disease
+PACHYMENINGITIS,Hypertrophic dura from IgG4-related disease
 CSFLEAK,Spinal or cranial breach causing low-pressure headaches
 KAYSERFLEISCHERRING,Corneal copper deposition in Wilson disease
 POSTERIORCOMMUNICATINGARTERY,Connecting vessel between ICA and PCA
@@ -936,7 +906,7 @@ COTARDSYNDROME,Delusion of being already dead
 TETRABENAZINE,VMAT2 inhibitor for chorea
 ADIE,Dilated pupil with poor light response
 NORTRIPTYLINE,TCA for neuropathic pain
-NEUROFIBROMATOSIS1,Genetic tumor syndrome type 1
+NEUROFIBROMATOSIS,Genetic tumor syndrome type 1
 ICHSCORE,Score predicting hemorrhage outcome
 LOGOPENICAPHASIA,Word retrieval variant of language loss
 BATTLESSIGN,Postauricular ecchymosis sign
@@ -963,7 +933,7 @@ PML,JC virus infection of brain
 CANAVAN,ASPA deficiency white matter disease
 LATERALLEMNISCUS,Auditory brainstem pathway
 MORTONNEUROMA,Plantar nerve lesion between toes
-NEUROFIBROMATOSIS2,Genetic tumor syndrome type 2
+NEUROFIBROMATOSIS,Genetic tumor syndrome type 2
 HYPOMIMIA,Classic thumb finger tremor
 TIMEOFLIGHTANGIOGRAPHY,Non contrast MRA method
 TOXOPLASMOSIS,Multiple ring enhancing lesions in AIDS
@@ -1054,19 +1024,12 @@ MILLARDSYNDROME,Pons lesion with facial and abducens
 MAPT,Tau gene linked to FTLD
 METASTASIS,Secondary brain tumor
 BENEDIKT,Midbrain lesion with tremor and ataxia
-SCN1A,Sodium channel gene for epilepsy
 SYRINX,Fluid cavity within spinal cord
 GRN,Progranulin gene in FTD
-SCN8A,Sodium channel epileptic encephalopathy
-KCNQ3,Potassium channel gene
 PARINAUD,Upgaze palsy from dorsal midbrain
-CACNA1A,Calcium channel related to EA2
 FRAGILEX,CGG repeat with intellectual disability
-KCNA1,Potassium channel for episodic ataxia
-SCN2A,Channel gene linked to seizures
 SPINALSTENOSIS,Narrowed canal with neurogenic claudication
 EMG,Electromyography test
-KCNT1,Gene for migrating seizures of infancy
 PINEOCYTOMA,Pineal parenchymal tumor
 DYSEMBRYOPLASTICTUMOR,Epilepsy associated cortical lesion
 BROWNSQUARD,Hemisection cord pattern of deficits
@@ -1095,7 +1058,6 @@ HYPERKALEMICPARALYSIS,Attacks with high potassium
 HYPOKALEMICPARALYSIS,Attacks with low potassium
 NEUROBRUCELLOSIS,Zoonotic infection of nervous system
 NEUROWHIPPLE,Tropheryma disease with oculomasticatory myorhythmia
-B12DEFICIENCY,Cause of subacute combined degeneration
 THIAMINEDEFICIENCY,Cause of Wernicke encephalopathy
 COPPER,Posterolateral column dysfunction; deficiency myelopathy
 MANGANESE,Basal ganglia metal toxicity
@@ -1111,12 +1073,11 @@ MYELIN,Insulating sheath of axons
 NODEOFRANVIER,Gap enabling saltatory conduction
 ACTIONPOTENTIAL,Rapid depolarization event
 PRKN,Parkin gene for early PD
-LRRK2,Kinase gene linked to PD
+LRRK,Kinase gene linked to PD
 TARDBP,TDP 43 gene for ALS
 FUS,RNA binding gene in ALS
 VCP,Multisystem proteinopathy gene
 SETX,ALS with ataxia gene
-FIG4,Gene linked to CMT and ALS
 GIANTCELLARTERITIS,Vasculitis risking vision loss
 MOTORNEURONDISEASE,ALS spectrum disorder
 ACETYLCHOLINESTERASE,Breaks down acetylcholine
@@ -1128,7 +1089,6 @@ MOSSYFIBER,Granule cell input
 MONOAMINEOXIDASEB,Deaminates dopamine
 CFIBERS,Slow unmyelinated pain fibers
 BRAINSTEMAUDITORYEVOKED,Click stimulus brainstem response
-T2HYPERINTENSITIES,White matter bright spots
 VISUALEVOKEDPOTENTIAL,Pattern reversal occipital response
 DEFAULTMODENETWORK,Rest state medial network
 GLUTAMATEDECARBOXYLASE,Makes GABA from glutamate

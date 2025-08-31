@@ -11,7 +11,7 @@
     .card { border: 2px solid #000; border-radius: 12px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
     .gridwrap { padding: 8px; display: flex; justify-content: center; align-items: center; width: 100%; box-sizing: border-box; }
     .cluecard { padding: 6px; }
-    .title { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; display:flex; align-items:center; justify-content:space-between; gap:12px;  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .title { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; display:flex; align-items:center; justify-content:space-between; gap:12px;  font-family: "Courier New", Courier, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
     .two { display: grid; grid-template-columns: minmax(260px,1fr) minmax(260px,360px); gap: 24px; align-items: start; }
     .cells { display: grid; gap: 0; margin: 0 auto; max-width: 100%; }
     .cell { position: relative; user-select: none; box-sizing: border-box; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; }
@@ -796,11 +796,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                 </div>
               
               
-              <div style={{marginTop:'10px', display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap'}}>
-                <button className="btn reveal" onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
-                <button className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
-                <button className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
-              </div>
+              
 </div>
               <div>
                 <div className="card cluecard">
@@ -848,3 +844,10 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
   </script>
 </body>
 </html>
+
+                <div style={{marginTop:'12px', display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap'}}>
+                  <button className="btn reveal" onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
+                  <button className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
+                  <button className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
+                </div>
+                <div className="credit" style={{marginTop:'6px'}}>created by micah etter, md</div>
