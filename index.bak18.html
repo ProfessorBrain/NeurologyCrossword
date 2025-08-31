@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neurology Crossword Puzzler</title>
+  <style>
+    :root { color-scheme: light; }
+    html, body { margin: 0; padding: 0; background: #ffffff; color: #111111; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 16px; }
+    .card { border: 2px solid #000; border-radius: 12px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .gridwrap { padding: 8px; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; box-sizing: border-box; }
+    .cluecard { padding: 6px; }
+    .title { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; display:flex; align-items:center; justify-content:space-between; gap:12px;  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .two { display: grid; grid-template-columns: minmax(260px,1fr) minmax(260px,360px); gap: 24px; align-items: start; }
+    .cells { display: grid; gap: 0; margin: 0 auto; max-width: 100%; max-height: 100%; }
+    .cell { position: relative; user-select: none; box-sizing: border-box; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; }
+    .block { background: #000; }
+    .open { background: #fff; }
+    .open.active { outline: 2px solid #000; outline-offset: -2px; background: #e6f9ed; }
+    .open.locked { background: #fde68a; }
+    .open.locked.active { background: #fcd34d; }
+    .open.revealed { background: #ede9fe !important; }
+    .open.revealed.active { background: #e9d5ff !important; }
+    .open.revealed span { color: #4c1d95; }
+    .num { position: absolute; top: 2px; left: 4px; font-size: 10px; opacity: .7; }
+    .btn { background:#fff; border:1px solid #000; padding:.5rem .75rem; border-radius:.5rem; cursor:pointer; }
+    .btn:hover { background:#f5f5f5; }
+    .btn.reveal { background:#f5f3ff; border-color:#7c3aed; }
+    .btn.reveal:hover { background:#ede9fe; }
+    .credit { padding-top: 8px; font-size: 12px; opacity: .7; text-align: right; }
+    .hint { font-size: 12px; color:#4c1d95; padding-left:8px; }
+    .error { color:#b91c1c; font-weight:600; }
+    #errOverlay { position: fixed; inset: 0; background: rgba(255,255,255,.96); color:#111; padding: 16px; z-index: 99999; display:none; }
+    #errOverlay pre { white-space: pre-wrap; word-break: break-word; }
+    .cluelist { list-style: none; margin: 0; padding: 0; padding-left: 0; }
+    .clue { display:flex; align-items:flex-start; gap:6px; padding:1px 0; border-bottom: 1px dotted #ddd; line-height:1.15; }
+    .clue:last-child { border-bottom: none; }
+    .clue-num { font-weight: 700; width: 2.2ch; text-align: right; }
+    .clue-text { flex: 1; }
+    /* Modal */
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index: 10000; }
+    .modal { background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+    .modal h3 { margin: 0 0 8px 0; font-size:18px; }
+    .modal .row { display:flex; gap:10px; align-items:center; padding:8px 0; }
+    .modal .actions { display:flex; gap:8px; justify-content:flex-end; padding-top:12px; }
+    .input { background:#fff; border:1px solid #000; padding:.5rem .5rem; border-radius:.5rem; width:100%; box-sizing:border-box; }
+
+    /* Ensure clue text is left-aligned */
+    .cluecard, .cluecard * { text-align: left; }
+    .cluelist { list-style: none; margin: 0; padding: 0; padding-left: 0; }
+    .clue { text-align: left; }
+    .clue-text { text-align: left; }
+
+    .cluecard h2 { margin: 0 0 4px 0; }
+    .sticky-grid { position: sticky; top: 8px; border: none !important; box-shadow: none !important; border-radius: 0 !important; max-height: calc(100vh - 16px); overflow: auto; }
+    .cluelist li::marker { content: ''; }
+
+    /* Kill bullets in all clue lists */
+    .cluecard ul { list-style: none !important; padding-left: 0 !important; margin-left: 0 !important; margin: 0; }
+    .cluecard li { list-style: none !important; }
+    .cluecard li::marker { content: '' !important; }
+
+  </style>
+</head>
+<body>
+  <div id="root" class="container"></div>
+  <div id="errOverlay"><h2>Runtime error</h2><pre id="errMsg"></pre></div>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    (function(){
+      function showErr(msg) {
+        var el = document.getElementById('errOverlay');
+        var pre = document.getElementById('errMsg');
+        if (el && pre) { pre.textContent = String(msg || 'Unknown error'); el.style.display = 'block'; }
+      }
+      window.addEventListener('error', function(e){ showErr(e && e.error ? (e.error.stack || e.error) : (e.message || e)); });
+      window.addEventListener('unhandledrejection', function(e){ showErr(e && e.reason ? (e.reason.stack || e.reason) : e); });
+      window.__showErr = showErr;
+    })();
+  </script>
+
+  <script type="text/babel" data-presets="env,react">
+    const { useEffect, useMemo, useRef, useState } = React;
+
+    // ---------- RNG & helpers ----------
+    function mulberry32(seed){ let t = seed >>> 0; return function(){ t += 0x6d2b79f5; let r = Math.imul(t ^ (t>>>15), 1|t); r ^= r + Math.imul(r ^ (r>>>7), 61|t); return ((r ^ (r>>>14))>>>0) / 4294967296; } }
+    function hashStringToInt(str){ let h = 2166136261>>>0; for (let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h,16777619);} return h>>>0; }
+    function newRandomSeed(){
+      try{
+        if (window.crypto && window.crypto.getRandomValues){
+          const a = new Uint32Array(1);
+          window.crypto.getRandomValues(a);
+          return (a[0]>>>0);
+        }
+      }catch(_){}
+      return ((Math.random()*0xFFFFFFFF)>>>0);
+    }
+    function shuffleInPlace(arr, rng){ for (let i=arr.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
+
+    // ---------- CSV (no fallback) ----------
+    function parseCSVTwoCols(text){
+      const lines = text.split(/\r?\n/).filter(ln=>ln.trim().length>0);
+      const out = [];
+      for (let li=0; li<lines.length; li++){
+        const line = lines[li];
+        const fields=[]; let cur=""; let inQ=false;
+        for (let i=0;i<line.length;i++){
+          const ch=line[i];
+          if (ch=='"'){ if (inQ && line[i+1]=='"'){ cur+='"'; i++; } else { inQ=!inQ; } }
+          else if (ch===',' && !inQ){ fields.push(cur); cur=""; }
+          else { cur+=ch; }
+        }
+        fields.push(cur);
+        if (fields.length>=2){
+          const ans=(fields[0]||"").trim().toUpperCase().replace(/[^A-Z]/g,"");
+          const clue=fields.slice(1).join(',').trim();
+          if (/^ANSWER$/i.test(ans) && /^CLUE$/i.test(clue)) continue;
+          if (ans.length>=3) out.push({answer:ans, clue});
+        }
+      }
+      return out;
+    }
+
+    function useClueBank(){
+      const [bank,setBank]=useState([]);
+      const [loading,setLoading]=useState(true);
+      const [error,setError]=useState(null);
+      useEffect(()=>{
+        let cancelled=false;
+        fetch('crosswordclues.csv')
+          .then(r=>{ if (!r.ok) throw new Error('CSV not found'); return r.text(); })
+          .then(txt=>{ if (cancelled) return; const parsed=parseCSVTwoCols(txt); if (parsed.length){ setBank(parsed.map(x=>({answer:x.answer.replace(/[^A-Z]/g,"").toUpperCase(), clue:x.clue}))); } else { setError('CSV parsed but no valid rows.'); }
+          })
+          .catch(e=>{ if (!cancelled){ setError((e && e.message) ? e.message : 'Failed to load crosswordclues.csv'); } })
+          .finally(()=>{ if (!cancelled) setLoading(false); });
+        return ()=>{ cancelled=true; };
+      },[]);
+      return { bank, loading, error };
+    }
+
+    // ---------- Date & helpers ----------
+    function phoenixYYYYMMDD(date=new Date()){
+      try{
+        const parts = new Intl.DateTimeFormat('en-CA',{timeZone:'America/Phoenix',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+        var y=null,m=null,d=null;
+        for (var i=0;i<parts.length;i++){ var p=parts[i]; if (p.type==='year') y=p.value; else if (p.type==='month') m=p.value; else if (p.type==='day') d=p.value; }
+        return y+'-'+m+'-'+d;
+      }catch(e){ const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,'0'), d=String(date.getDate()).padStart(2,'0'); return y+'-'+m+'-'+d; }
+    }
+    const DIRS={ACROSS:'across',DOWN:'down'};
+
+    const SIZE_PRESETS = {
+      small: { base: 15, maxLen: 8, maxClues: 10, minPlaced: 6 },
+      medium: { base: 21, maxLen: 14, maxClues: 16, minPlaced: 10 },
+      large: { base: 31, maxLen: 35, maxClues: 20, minPlaced: 12 }
+    };
+
+    function computeGridSize(words, sizeOpt){
+      const preset = SIZE_PRESETS[sizeOpt] || SIZE_PRESETS.medium;
+      const MAX=35, MIN=13; const longest=Math.max(3, ...words.map(w=>w.answer.length));
+      let size=Math.max(preset.base, longest+2);
+      size=Math.min(MAX, Math.max(MIN,size));
+      return size;
+    }
+
+    // ---------- Grid helpers ----------
+    function isStartAcrossCell(r,c,g){
+      const size=g.length;
+      if (r<0||c<0||r>=size||c>=size) return false;
+      if (g[r][c]===null) return false;
+      const left = (c-1>=0) ? g[r][c-1] : null;
+      const right = (c+1<size) ? g[r][c+1] : null;
+      return (left===null) && (right!==null);
+    }
+    function isStartDownCell(r,c,g){
+      const size=g.length;
+      if (r<0||c<0||r>=size||c>=size) return false;
+      if (g[r][c]===null) return false;
+      const up = (r-1>=0) ? g[r-1][c] : null;
+      const down = (r+1<size) ? g[r+1][c] : null;
+      return (up===null) && (down!==null);
+    }
+    
+    function makeEmptyGrid(size){ return Array.from({length:size},()=>Array(size).fill(null)); }
+    function canPlace(word,row,col,dir,grid){
+      const size=grid.length, len=word.length;
+      if (dir===DIRS.ACROSS){
+        if (col<0||col+len>size||row<0||row>=size) return false;
+        if (col-1>=0 && grid[row][col-1]!==null) return false;
+        if (col+len<size && grid[row][col+len]!==null) return false;
+        for (let i=0;i<len;i++){
+          const r=row, c=col+i, cell=grid[r][c];
+          if (cell!==null && cell!==word[i]) return false;
+          if (cell===null){
+            if (r-1>=0 && grid[r-1][c]!==null) return false;
+            if (r+1<size && grid[r+1][c]!==null) return false;
+          }
+        }
+        return true;
+      } else {
+        if (row<0||row+len>size||col<0||col>=size) return false;
+        if (row-1>=0 && grid[row-1][col]!==null) return false;
+        if (row+len<size && grid[row+len][col]!==null) return false;
+        for (let i=0;i<len;i++){
+          const r=row+i, c=col, cell=grid[r][c];
+          if (cell!==null && cell!==word[i]) return false;
+          if (cell===null){
+            if (c-1>=0 && grid[r][c-1]!==null) return false;
+            if (c+1<size && grid[r][c+1]!==null) return false;
+          }
+        }
+        return true;
+      }
+    }
+    function placeWord(word,row,col,dir,grid){
+      /* existing content will be moved down */
+      for (let i=0;i<word.length;i++){
+        const r=dir===DIRS.ACROSS?row:row+i, c=dir===DIRS.ACROSS?col+i:col;
+        grid[r][c]=word[i];
+      }
+    }
+
+    function generateCrosswordFromWords(words, seed, size){
+      const rng=mulberry32(seed);
+      const grid=makeEmptyGrid(size);
+      const placements=[];
+      const copy=words.slice();
+      shuffleInPlace(copy,rng);
+
+      const first=copy.shift();
+      if (!first) {
+        return {
+          grid: grid,
+          placements: [],
+          numbers: Array.from({length:size},()=>Array(size).fill(null)),
+          bounds: {minR:0,maxR:size-1,minC:0,maxC:size-1}
+        };
+      }
+      const mid=Math.floor(size/2);
+      const startCol=Math.max(0, Math.min(size-first.answer.length, mid-Math.floor(first.answer.length/2)));
+      placeWord(first.answer, mid, startCol, DIRS.ACROSS, grid);
+      placements.push({answer:first.answer, clue:first.clue, row:mid, col:startCol, dir:DIRS.ACROSS});
+
+      function findLetterPositions(L){
+        const hits=[];
+        for (let r=0;r<size;r++){
+          for (let c=0;c<size;c++){
+            if (grid[r][c]===L) hits.push([r,c]);
+          }
+        }
+        return hits;
+      }
+
+      for (let wi=0; wi<copy.length; wi++){
+        const w = copy[wi];
+        const word=w.answer;
+        let placed=false;
+        const crossLetters=[];
+        for (let i=0;i<word.length;i++){ if (crossLetters.indexOf(word[i])===-1) crossLetters.push(word[i]); }
+        shuffleInPlace(crossLetters,rng);
+        for (let ci=0; ci<crossLetters.length && !placed; ci++){
+          const L=crossLetters[ci];
+          const positions=findLetterPositions(L);
+          if (!positions || !positions.length) continue;
+          const idxs=[];
+          for (let i=0;i<word.length;i++) if (word[i]===L) idxs.push(i);
+          shuffleInPlace(idxs,rng);
+          for (let ii=0; ii<idxs.length && !placed; ii++){
+            const i = idxs[ii];
+            for (let pi=0; pi<positions.length && !placed; pi++){
+              const rc = positions[pi];
+              if (!Array.isArray(rc) || rc.length<2) continue;
+              const r = rc[0]; const c = rc[1];
+              if (typeof r!=='number' || typeof c!=='number') continue;
+              const acCol=c-i;
+              if (canPlace(word,r,acCol,DIRS.ACROSS,grid)){
+                placeWord(word,r,acCol,DIRS.ACROSS,grid);
+                placements.push({answer:w.answer, clue:w.clue, row:r, col:acCol, dir:DIRS.ACROSS});
+                placed=true; break;
+              }
+              const dnRow = r-i;
+              if (isStartAcrossCell(r,c,grid) || isStartDownCell(r,c,grid)) { /* skip numbered cell */ } else if (canPlace(word,dnRow,c,DIRS.DOWN,grid)){placeWord(word,dnRow,c,DIRS.DOWN,grid);
+                placements.push({answer:w.answer, clue:w.clue, row:dnRow, col:c, dir:DIRS.DOWN});
+                placed=true; break;
+              }
+            }
+          }
+        }
+      }
+
+      if (placements.length>1){
+        const H=grid.length, W=grid[0].length;
+        const counts=Array.from({length:H},()=>Array(W).fill(0));
+        for (let pIndex=0;pIndex<placements.length;pIndex++){
+          const p=placements[pIndex];
+          for (let i=0;i<p.answer.length;i++){
+            const r=p.dir===DIRS.ACROSS?p.row:p.row+i;
+            const c=p.dir===DIRS.ACROSS?p.col+i:p.col;
+            if (r>=0 && r<H && c>=0 && c<W) counts[r][c]+=1;
+          }
+        }
+        const keep=[];
+        for (let pIndex=0;pIndex<placements.length;pIndex++){
+          const p=placements[pIndex];
+          let shares=false;
+          for (let i=0;i<p.answer.length;i++){
+            const r=p.dir===DIRS.ACROSS?p.row:p.row+i;
+            const c=p.dir===DIRS.ACROSS?p.col+i:p.col;
+            if (counts[r][c]>1){ shares=true; break; }
+          }
+          if (shares) keep.push(p);
+        }
+        if (keep.length!==placements.length){
+          for (let r=0;r<H;r++) for (let c=0;c<W;c++) grid[r][c]=null;
+          for (let j=0;j<keep.length;j++){
+            const p=keep[j];
+            for (let i=0;i<p.answer.length;i++){
+              const r=p.dir===DIRS.ACROSS?p.row:p.row+i;
+              const c=p.dir===DIRS.ACROSS?p.col+i:p.col;
+              grid[r][c]=p.answer[i];
+            }
+          }
+          placements.length=0;
+          for (let j=0;j<keep.length;j++) placements.push(keep[j]);
+        }
+      }
+
+      let num=1;
+      const numbers=Array.from({length:size},()=>Array(size).fill(null));
+      function isLetter(r,c){ return r>=0&&r<size&&c>=0&&c<size&&grid[r][c]!==null; }
+      for (let r=0;r<size;r++){
+        for (let c=0;c<size;c++){
+          if (!isLetter(r,c)) continue;
+          const startsAcross=!isLetter(r,c-1)&&isLetter(r,c)&&isLetter(r,c+1);
+          const startsDown=!isLetter(r-1,c)&&isLetter(r,c)&&isLetter(r+1,c);
+          if (startsAcross||startsDown) numbers[r][c]=num++;
+        }
+      }
+      for (let pIndex=0;pIndex<placements.length;pIndex++){
+        const p=placements[pIndex];
+        p.number = numbers[p.row][p.col];
+      }
+
+      let minR=size, maxR=-1, minC=size, maxC=-1;
+      for (let r=0;r<size;r++){
+        for (let c=0;c<size;c++){
+          if (grid[r][c]!==null){
+            if (r<minR) minR=r;
+            if (r>maxR) maxR=r;
+            if (c<minC) minC=c;
+            if (c>maxC) maxC=c;
+          }
+        }
+      }
+      if (maxR===-1){ minR=0; maxR=size-1; minC=0; maxC=size-1; }
+
+      return { grid, placements, numbers, bounds:{minR,maxR,minC,maxC} };
+    }
+
+    function pickDailyWords(bank, rng, sizeOpt){
+      const preset = SIZE_PRESETS[sizeOpt] || SIZE_PRESETS.medium;
+      const pool=bank.slice().filter(x=>x.answer.length>=3 && x.answer.length<=preset.maxLen);
+      pool.sort((a,b)=>Math.abs(a.answer.length-7)-Math.abs(b.answer.length-7));
+      shuffleInPlace(pool,rng);
+      const chosen=[]; const seen={};
+      for (let i=0;i<pool.length;i++){
+        if (chosen.length >= preset.maxClues) break;
+        const item=pool[i];
+        if (seen[item.answer]) continue;
+        chosen.push(item);
+        seen[item.answer]=1;
+      }
+      return chosen;
+    }
+
+    function fireConfetti(count){
+      count = (typeof count==='number' && isFinite(count)) ? count : 8;
+      const container=document.createElement('div');
+      container.style.position='fixed'; container.style.inset='0'; container.style.pointerEvents='none';
+      document.body.appendChild(container);
+      const EMOJIS=['🎉','✨','⭐'];
+      const N=Math.max(1, Math.min(40, Math.floor(count)));
+      for (let i=0;i<N;i++){
+        const span=document.createElement('span');
+        span.textContent=EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+        span.style.position='absolute';
+        span.style.left=(Math.random()*100)+'vw';
+        span.style.top='-10px';
+        span.style.fontSize=(12+Math.random()*12)+'px';
+        span.style.opacity='0.9';
+        span.style.transition='transform 1s ease-out, opacity 1s ease-out';
+        container.appendChild(span);
+        requestAnimationFrame(function(){
+          span.style.transform='translateY('+(70+Math.random()*80)+'vh) rotate(' + ((Math.random()-0.5)*180) + 'deg)';
+          span.style.opacity='0';
+        });
+      }
+      setTimeout(function(){ container.remove(); }, 1100);
+    }
+
+    function App(){
+      const { bank, loading, error } = useClueBank();
+      const [sizeOpt, setSizeOpt] = useState('medium');
+      const [seed, setSeed] = useState(()=>newRandomSeed());
+      const rng = useMemo(()=>mulberry32(seed), [seed]);
+      const words = useMemo(()=> bank.length? pickDailyWords(bank, rng, sizeOpt): [], [bank, rng, sizeOpt]);
+      const size = useMemo(()=> computeGridSize(words.length?words:[{answer:'PLACEHOLDER', clue:''}], sizeOpt), [words, sizeOpt]);
+
+      const emptySize = Math.max(13, Math.min(35, size||15));
+      const emptyResult = useMemo(()=>({ 
+        grid: makeEmptyGrid(emptySize),
+        placements: [],
+        numbers: Array.from({length: emptySize},()=>Array(emptySize).fill(null)),
+        bounds: {minR:0, maxR:emptySize-1, minC:0, maxC:emptySize-1}
+      }), [emptySize]);
+
+      const result = useMemo(()=>{
+        try{
+          if (!words.length) return emptyResult;
+          let best=null;
+          const MAX_SALTS=200, MIN_WORDS=(SIZE_PRESETS[sizeOpt]||SIZE_PRESETS.medium).minPlaced;
+          for (let salt=0; salt<MAX_SALTS; salt++){
+            const g = generateCrosswordFromWords(words, seed+salt, size);
+            const placed=g.placements.length;
+            const H=g.grid.length, W=g.grid[0].length;
+            const counts=Array.from({length:H},()=>Array(W).fill(0));
+            for (let pIndex=0;pIndex<g.placements.length;pIndex++){
+              const p=g.placements[pIndex];
+              for (let i=0;i<p.answer.length;i++){
+                const r=p.dir===DIRS.ACROSS?p.row:p.row+i, c=p.dir===DIRS.ACROSS?p.col+i:p.col;
+                if (r>=0 && r<H && c>=0 && c<W) counts[r][c]+=1;
+              }
+            }
+            let crosses=0; for (let r=0;r<H;r++) for (let c=0;c<W;c++) if (counts[r][c]>1) crosses++;
+            const score=placed*10+crosses;
+            if (!best || score>best.score) best={...g, score};
+            if (placed>=MIN_WORDS) return g;
+          }
+          return best || generateCrosswordFromWords(words, seed, size);
+        }catch(e){
+          console.error('result memo failed', e);
+          return emptyResult;
+        }
+      }, [words, seed, size, emptyResult]);
+
+      const grid = result.grid, placements = result.placements, numbers = result.numbers, bounds = result.bounds;
+
+      const [userGrid, setUserGrid]=useState(grid.map(row=>row.map(x=>x? "" : null)));
+      useEffect(()=>setUserGrid(grid.map(row=>row.map(x=>x? "" : null))),[grid]);
+      const [active,setActive]=useState(null);
+      const [dir,setDir]=useState(DIRS.ACROSS);
+      const [locked,setLocked]=useState(new Set());
+      const [revealMode, setRevealMode] = useState(false);
+      const [showOptions, setShowOptions] = useState(false);
+      const [seedInput, setSeedInput] = useState('');
+      const [revealed, setRevealed] = useState(new Set());
+      useEffect(()=>{ setLocked(new Set()); setRevealed(new Set()); }, [grid]);
+
+      const wrapRef=useRef(null);
+      const [cellPx,setCellPx]=useState(24);
+      const cols=Math.max(1,bounds.maxC-bounds.minC+1), rows=Math.max(1,bounds.maxR-bounds.minR+1);
+      const [availableHeight,setAvailableHeight]=useState(400);
+      useEffect(()=>{
+        const recalc=()=>{
+          if (!wrapRef.current) return;
+          const w=wrapRef.current.clientWidth||320;
+          const rect=wrapRef.current.getBoundingClientRect();
+          const vh=window.innerHeight||800;
+          const footerBuffer=80;
+          const availH=Math.max(140, Math.floor(vh-rect.top-footerBuffer));
+          setAvailableHeight(availH);
+          const px=Math.max(12, Math.min(Math.floor(w/cols), Math.floor(availH/rows)));
+          setCellPx(px);
+        };
+        recalc();
+        var ro=null;
+        try{ ro=new ResizeObserver(()=>recalc()); if (wrapRef.current) ro.observe(wrapRef.current); }catch(e){}
+        window.addEventListener('resize', recalc);
+        return ()=>{ try{ if (ro){ ro.disconnect(); } }catch(e){} window.removeEventListener('resize', recalc); };
+      },[cols,rows]);
+
+      function within(r,c){ return r>=bounds.minR && r<=bounds.maxR && c>=bounds.minC && c<=bounds.maxC; }
+      function isLetterCell(r,c){ return within(r,c) && grid[r][c]!==null; }
+      function cellKey(r,c){ return r+':'+c; }
+      function getWordSpan(r,c,d){
+        if (!isLetterCell(r,c)) return null;
+        let r0=r, c0=c;
+        if (d===DIRS.ACROSS){
+          while (c0-1>=0 && grid[r][c0-1]!==null) c0--;
+        } else {
+          while (r0-1>=0 && grid[r0-1][c]!==null) r0--;
+        }
+        const cells=[];
+        if (d===DIRS.ACROSS){
+          let k=0; while (c0+k<grid.length && grid[r][c0+k]!==null){ cells.push([r,c0+k]); k++; }
+        } else {
+          let k=0; while (r0+k<grid.length && grid[r0+k][c]!==null){ cells.push([r0+k,c]); k++; }
+        }
+        var number=null;
+        if (numbers && numbers[r0] && typeof numbers[r0][c0] !== 'undefined' && numbers[r0][c0] !== null){ number=numbers[r0][c0]; }
+        return {startR:r0,startC:c0,cells,number};
+      }
+      function moveNext(r,c,d,backwards){
+        backwards = !!backwards;
+        const span=getWordSpan(r,c,d);
+        if (!span || !span.cells || !span.cells.length) return null;
+        var idx=-1; for (var i=0;i<span.cells.length;i++){ if (span.cells[i][0]===r && span.cells[i][1]===c){ idx=i; break; } }
+        var nxt=idx+(backwards?-1:1);
+        if (nxt<0) nxt=0;
+        if (nxt>=span.cells.length) nxt=span.cells.length-1;
+        const tuple = span.cells[nxt];
+        if (!tuple || tuple.length<2) return null;
+        return { r: tuple[0], c: tuple[1] };
+      }
+      function pickSmartDir(r,c,preferred,g){
+        const lenAcross=(function(){ let c0=c; while (c0-1>=0 && g[r][c0-1]!==null) c0--; let n=0; while (c0+n<g.length && g[r][c0+n]!==null) n++; return n; })();
+        const lenDown=(function(){ let r0=r; while (r0-1>=0 && g[r0-1][c]!==null) r0--; let n=0; while (r0+n<g.length && g[r0+n][c]!==null) n++; return n; })();
+        const hasAcross=lenAcross>=2, hasDown=lenDown>=2;
+        if (hasAcross&&!hasDown) return DIRS.ACROSS;
+        if (!hasAcross&&hasDown) return DIRS.DOWN;
+        if (hasAcross&&hasDown){
+          if (lenDown>lenAcross) return DIRS.DOWN;
+          if (lenAcross>lenDown) return DIRS.ACROSS;
+          return preferred;
+        }
+        return preferred;
+      }
+
+      useEffect(()=>{
+        const onKey=(e)=>{
+          if (e.key==='Escape' && revealMode) { setRevealMode(false); return; }
+          if (!active) return;
+          if (e.key==='Tab'){ e.preventDefault(); setDir(d=>d===DIRS.ACROSS?DIRS.DOWN:DIRS.ACROSS); return; }
+          if (e.key==='Backspace'){
+            e.preventDefault(); const r=active.r, c=active.c; if (!isLetterCell(r,c)) return; if (locked.has(cellKey(r,c))) return;
+            setUserGrid(ug=>{ const g=ug.map(row=>row.slice()); g[r][c]=''; return g; });
+            const prev=moveNext(r,c,dir,true); if (prev) setActive(prev); return;
+          }
+          if (/^[a-z]$/i.test(e.key)){
+            e.preventDefault(); const ch=e.key.toUpperCase(); const r=active.r, c=active.c; if (!isLetterCell(r,c)) return; if (locked.has(cellKey(r,c))) return;
+            var newlyCompleted=0;
+            setUserGrid(ug=>{
+              const g=ug.map(row=>row.slice());
+              g[r][c]=ch;
+              const spans=[getWordSpan(r,c,DIRS.ACROSS), getWordSpan(r,c,DIRS.DOWN)].filter(Boolean);
+              const newLocked=new Set(locked);
+              for (var si=0; si<spans.length; si++){
+                var span=spans[si]; if (!span || span.cells.length<2) continue;
+                var ok=true;
+                for (var ii=0; ii<span.cells.length; ii++){
+                  var tup = span.cells[ii]; if (!tup || tup.length<2) continue;
+                  var rr=tup[0], cc=tup[1];
+                  if (!grid[rr][cc] || g[rr][cc]!==grid[rr][cc]){ ok=false; break; }
+                }
+                var already=true;
+                for (var jj=0; jj<span.cells.length; jj++){
+                  var tup2 = span.cells[jj]; if (!tup2 || tup2.length<2) continue;
+                  var rr2=tup2[0], cc2=tup2[1];
+                  if (!locked.has(cellKey(rr2,cc2))) { already=false; break; }
+                }
+                if (ok && !already){
+                  newlyCompleted++;
+                  for (var kk=0; kk<span.cells.length; kk++){
+                    var tup3=span.cells[kk]; if (!tup3 || tup3.length<2) continue;
+                    var rr3=tup3[0], cc3=tup3[1];
+                    newLocked.add(cellKey(rr3,cc3));
+                  }
+                }
+              }
+              if (newLocked.size!==locked.size) setLocked(newLocked);
+              return g;
+            });
+            if (newlyCompleted>0) fireConfetti(8);
+            const nxt=moveNext(r,c,dir,false); if (nxt) setActive(nxt);
+            return;
+          }
+          const delta={ArrowUp:[-1,0],ArrowDown:[1,0],ArrowLeft:[0,-1],ArrowRight:[0,1]};
+          if (delta[e.key]){
+            e.preventDefault();
+            const dxy=delta[e.key];
+            const nr=active.r+dxy[0], nc=active.c+dxy[1];
+            if (within(nr,nc) && isLetterCell(nr,nc)) setActive({r:nr,c:nc});
+          }
+        };
+        window.addEventListener('keydown', onKey);
+        return ()=>window.removeEventListener('keydown', onKey);
+      }, [active, dir, grid, locked, revealMode]);
+
+      const errorSet=useMemo(()=>{
+        const errs=new Set();
+        for (let r=bounds.minR;r<=bounds.maxR;r++){
+          for (let c=bounds.minC;c<=bounds.maxC;c++){
+            if (grid[r] && typeof grid[r][c] !== 'undefined' && grid[r][c] && userGrid[r] && typeof userGrid[r][c] !== 'undefined' && userGrid[r][c] && userGrid[r][c]!==grid[r][c]) errs.add(cellKey(r,c));
+          }
+        }
+        return errs;
+      },[userGrid,grid,bounds]);
+      const across=useMemo(()=>placements.filter(p=>p.dir===DIRS.ACROSS).slice().sort((a,b)=>a.number-b.number),[placements]);
+      const down=useMemo(()=>placements.filter(p=>p.dir===DIRS.DOWN).slice().sort((a,b)=>a.number-b.number),[placements]);
+
+      function renderCells(){
+        const items=[];
+        const R = bounds.maxR - bounds.minR + 1;
+        const C = bounds.maxC - bounds.minC + 1;
+        for (let ri=0; ri<R; ri++){
+          const r = bounds.minR + ri;
+          for (let ci=0; ci<C; ci++){
+            const c = bounds.minC + ci;
+            const letter=grid[r][c];
+            const isCell = letter!==null;
+            const id = cellKey(r,c);
+            const isLocked=locked.has(id);
+            const isActive = active && active.r===r && active.c===c;
+            const isRevealed = revealed.has(id);
+            const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? userGrid[r][c] : '';
+            var num=null;
+            if (numbers && numbers[r] && typeof numbers[r][c] !== 'undefined' && numbers[r][c] !== null){ num=numbers[r][c]; }
+            items.push(
+              <div key={id} className={'cell ' + (isCell?'open':'block') + (isActive&&isCell?' active':'') + (isLocked?' locked':'') + (isRevealed?' revealed':'')}
+                   onClick={()=>handleCellClick(r,c,isCell,id)}>
+                {isCell && num ? <div className="num">{num}</div> : null}
+                {isCell ? <span style={{ color: isRevealed? '#4c1d95' : (isLocked? '#7c5c00' : (errorSet.has(id)? '#dc2626' : '#111111')) }}>{showLetter}</span> : null}
+              </div>
+            );
+          }
+        }
+        return items;
+      }
+
+      const handleCellClick = (r,c,isCell,id)=>{
+        if (!isCell) return;
+        if (revealMode){
+          const letter = grid[r][c];
+          if (!letter) { setRevealMode(false); return; }
+          var newlyCompleted=0;
+          setUserGrid(ug=>{
+            const g=ug.map(row=>row.slice());
+            g[r][c]=letter;
+            const spans=[getWordSpan(r,c,DIRS.ACROSS), getWordSpan(r,c,DIRS.DOWN)].filter(Boolean);
+            const newLocked=new Set(locked);
+            for (var si=0; si<spans.length; si++){
+              var span=spans[si]; if (!span || span.cells.length<2) continue;
+              var ok=true;
+              for (var ii=0; ii<span.cells.length; ii++){
+                var tup = span.cells[ii]; if (!tup || tup.length<2) continue;
+                var rr=tup[0], cc=tup[1];
+                if (!grid[rr][cc] || g[rr][cc]!==grid[rr][cc]){ ok=false; break; }
+              }
+              var already=true;
+              for (var jj=0; jj<span.cells.length; jj++){
+                var tup2 = span.cells[jj]; if (!tup2 || tup2.length<2) continue;
+                var rr2=tup2[0], cc2=tup2[1];
+                if (!locked.has(cellKey(rr2,cc2))) { already=false; break; }
+              }
+              if (ok && !already){
+                newlyCompleted++;
+                for (var kk=0; kk<span.cells.length; kk++){
+                  var tup3=span.cells[kk]; if (!tup3 || tup3.length<2) continue;
+                  var rr3=tup3[0], cc3=tup3[1];
+                  newLocked.add(cellKey(rr3,cc3));
+                }
+              }
+            }
+            if (newLocked.size!==locked.size) setLocked(newLocked);
+            return g;
+          });
+          setRevealed(prev=>{ var nn=new Set(prev); nn.add(id); return nn; });
+          if (newlyCompleted>0) fireConfetti(8);
+          setRevealMode(false);
+          setActive({r,c});
+          setDir(pickSmartDir(r,c,DIRS.ACROSS,grid));
+          return;
+        }
+        setActive({r,c});
+        setDir(pickSmartDir(r,c,DIRS.ACROSS,grid));
+      };
+
+      const showStatus = loading || error || !bank.length;
+      return (
+        <>
+          <header className="title\"><div>Neurology Crossword Puzzler</div><div></div></header>
+
+          {showOptions && (
+            <div className="overlay" onClick={(e)=>{ if (e.target===e.currentTarget) setShowOptions(false); }}>
+              <div className="modal" role="dialog" aria-modal="true" aria-label="Options">
+                <h3>Options</h3>
+                <div className="row">
+                  <strong>Size:</strong>
+                  <label><input type="radio" name="size" checked={sizeOpt==='small'} onChange={()=>setSizeOpt('small')} /> small</label>
+                  <label><input type="radio" name="size" checked={sizeOpt==='medium'} onChange={()=>setSizeOpt('medium')} /> medium</label>
+                  <label><input type="radio" name="size" checked={sizeOpt==='large'} onChange={()=>setSizeOpt('large')} /> large</label>
+                </div>
+                
+                <div className="row" style={{flexDirection:'column', alignItems:'stretch'}}>
+                  <label style={{fontWeight:700, marginBottom:'4px'}}>Seed</label>
+                  <input className="input" type="text" value={seedInput} placeholder={String(seed)} onChange={(e)=>setSeedInput(e.target.value)} />
+                  
+                </div>
+    
+                <div className="actions">
+                  <button className="btn" onClick={()=>setShowOptions(false)}>Cancel</button>
+                  <button className="btn" onClick={()=>{
+                    const s=(seedInput||'').trim();
+                    let newS=null;
+                    if (s.length){
+                      if (/^\d+$/.test(s)) { newS=(parseInt(s,10)>>>0); }
+                      else { newS=hashStringToInt(s); }
+                    }
+                    setShowOptions(false);
+                    if (newS!==null) setSeed(newS);
+                  }}>Apply</button>
+                </div>
+    
+              </div>
+            </div>
+          )}
+
+          {showStatus ? (
+            <div className="card cluecard" style={{marginTop:'12px'}}>
+              {loading && <div><strong>Loading</strong> crosswordclues.csv…</div>}
+              {!loading && error && <div className="error">{String(error)}</div>}
+              {!loading && !error && !bank.length && <div className="error">No data found in crosswordclues.csv</div>}
+              <p style={{marginTop:'8px'}}>Place a 2-column <code>crosswordclues.csv</code> (Answer, Clue) next to this HTML and refresh. If you opened this file with <code>file://</code>, run a local server (e.g., <code>python -m http.server</code>).</p>
+            </div>
+          ) : (
+            <div className="two">
+              <div>
+                <div className="card" className="card sticky-grid">
+                  <div className="gridwrap" ref={wrapRef}>
+                    <div className="cells" style={{gridTemplateColumns:`repeat(${Math.max(1,bounds.maxC-bounds.minC+1)}, ${cellPx}px)`, gridTemplateRows:`repeat(${Math.max(1,bounds.maxR-bounds.minR+1)}, ${cellPx}px)`, width:`${cellPx*(Math.max(1,bounds.maxC-bounds.minC+1))}px`, height:`${cellPx*(Math.max(1,bounds.maxR-bounds.minR+1))}px`}}>
+                      {renderCells()}
+                    </div>
+                  </div>
+                </div>
+              
+              
+              <div style={{marginTop:'10px', display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap'}}>
+                <button className="btn" onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal a letter</button>
+                <button className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
+                <button className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
+              </div>
+</div>
+              <div>
+                <div className="card cluecard">
+                  <h2>Across</h2>
+                  <ul style={{maxHeight: availableHeight+'px', overflow:'auto', paddingRight:'6px'}}>
+                    {across.length ? across.map(p=> (
+                      <li key={'A-'+p.number+'-'+p.answer}>
+                        <button className="btn" onClick={()=>{ setActive({r:p.row,c:p.col}); setDir(DIRS.ACROSS); }}>{p.number+'. '+p.clue}</button>
+                      </li>
+                    )) : <li>(none)</li>}
+                  </ul>
+                </div>
+                <div className="card cluecard" style={{marginTop:'16px'}}>
+                  <h2>Down</h2>
+                  <ul style={{maxHeight: availableHeight+'px', overflow:'auto', paddingRight:'6px'}}>
+                    {down.length ? down.map(p=> (
+                      <li key={'D-'+p.number+'-'+p.answer}>
+                        <button className="btn" onClick={()=>{ setActive({r:p.row,c:p.col}); setDir(DIRS.DOWN); }}>{p.number+'. '+p.clue}</button>
+                      </li>
+                    )) : <li>(none)</li>}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+</>
+      );
+    }
+
+    function Root(){ return <App/>; }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<Root/>);
+  </script>
+</body>
+</html>

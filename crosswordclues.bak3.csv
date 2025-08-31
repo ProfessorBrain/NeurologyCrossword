@@ -126,7 +126,7 @@ CAVERNOUSMALFORMATION,Mulberry lesion with hemosiderin rim on MRI
 ISCHEMICSTROKE,Focal deficit from arterial occlusion
 LACUNARINFARCT,Small deep infarct from lipohyalinosis
 WATERSHEDINFARCT,Borderzone ischemia between arterial territories
-S,Noncontrast CT clue of acute thrombus in M1
+HYPERDENSEMCASIGN,Noncontrast CT clue of acute thrombus in M1
 DENSEBASILARSIGN,Hyperattenuated basilar artery on CT indicating thrombosis
 ASPECTS,Ten-point CT score for early ischemia in MCA territory
 NIHSS,Standardized scale to quantify stroke severity
@@ -364,6 +364,9 @@ BRUDZINSKISIGN,Hip/knee flexion with neck flexion in meningitis
 HINTSEXAM,"Head impulse, nystagmus, test of skew for acute vestibular syndrome"
 EPLEYMANEUVER,Canalith repositioning for posterior canal BPPV
 DIXHALLPIKE,Provocative test for posterior canal BPPV
+MCASTROKE,Acute infarct in the Middle cerebral artery territory
+MCASYNDROME,Typical deficits of Middle cerebral artery involvement
+MCAOCCLUSION,Thrombotic or embolic blockage of the Middle cerebral artery
 THORACICOUTLETSYNDROME,Compression of brachial plexus or subclavian vessels
 LONGTHORACICNEUROPATHY,Scapular winging from serratus anterior denervation
 SUPRASCAPULARNEUROPATHY,Shoulder pain with infraspinatus weakness

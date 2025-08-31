@@ -126,7 +126,7 @@ CAVERNOUSMALFORMATION,Mulberry lesion with hemosiderin rim on MRI
 ISCHEMICSTROKE,Focal deficit from arterial occlusion
 LACUNARINFARCT,Small deep infarct from lipohyalinosis
 WATERSHEDINFARCT,Borderzone ischemia between arterial territories
-S,Noncontrast CT clue of acute thrombus in M1
+HYPERDENSEMCASIGN,Noncontrast CT clue of acute thrombus in M1
 DENSEBASILARSIGN,Hyperattenuated basilar artery on CT indicating thrombosis
 ASPECTS,Ten-point CT score for early ischemia in MCA territory
 NIHSS,Standardized scale to quantify stroke severity
@@ -364,6 +364,9 @@ BRUDZINSKISIGN,Hip/knee flexion with neck flexion in meningitis
 HINTSEXAM,"Head impulse, nystagmus, test of skew for acute vestibular syndrome"
 EPLEYMANEUVER,Canalith repositioning for posterior canal BPPV
 DIXHALLPIKE,Provocative test for posterior canal BPPV
+MCASTROKE,Acute infarct in the Middle cerebral artery territory
+MCASYNDROME,Typical deficits of Middle cerebral artery involvement
+MCAOCCLUSION,Thrombotic or embolic blockage of the Middle cerebral artery
 THORACICOUTLETSYNDROME,Compression of brachial plexus or subclavian vessels
 LONGTHORACICNEUROPATHY,Scapular winging from serratus anterior denervation
 SUPRASCAPULARNEUROPATHY,Shoulder pain with infraspinatus weakness
@@ -1182,47 +1185,3 @@ KCOMPLEXES,N2 sleep waveform
 SLEEPSPINDLES,12 to 15 Hz bursts in N2
 EPILEPTIFORMDISCHARGE,Spike or sharp wave pattern
 POSTICTALSTATE,Period after a seizure
-SEPTALNUCLEI,Cholinergic forebrain group
-BABINSKIRESPONSE,Toe extension in infants is normal
-PALMARGRASP,Infant hand closing on touch
-PLAGIOCEPHALY,Skull asymmetry from positioning
-TRIGGERFINGER,Stenosing flexor tenosynovitis
-UNCUS,Medial temporal hook shaped structure
-ASPECTS,Early ischemia score on CT
-VESTIBULARNUCLEI,Brainstem balance centers
-FIBRILLATIONPOTENTIAL,Spontaneous single muscle fiber spike
-MYELINBASICPROTEIN,Marker of active demyelination
-INTERFERENCEPATTERN,Full EMG at maximal effort
-UTRICLE,Otolith organ sensing horizontal acceleration
-ASYMMETRICTONICNECKREFLEX,Fencer posture in infants
-DEVELOPMENTALDYSPRAXIA,Childhood motor planning difficulty
-PERIRHINALCORTEX,Object memory association area
-DEQUERVAINSTENOSYNOVITIS,Thumb tendon sheath inflammation
-POSITIVEWAVESHARP,Denervation waveform on EMG
-CSFOBSTRUCTION,Blockage affecting fluid flow
-MOROREFLEX,Infant startle like response
-PIRIFORMCORTEX,Primary olfactory cortex
-ROOTINGREFLEX,Infant turns to cheek touch
-BRACHIALPLEXUSBIRTHINJURY,Neonatal upper limb weakness
-SUBICULUM,Hippocampal output region
-POPLITEALENTRAPMENT,Vascular and nerve compression behind knee
-FROINSSYNDROME,High protein with low flow CSF
-NEUROMUSCULARBLOCKADE,Loss of transmission at junction
-DECREMENTALRESPONSE,Drop on low frequency RNS
-SLEEPINERTIA,Grogginess on awakening
-PRIMARYSEXUALHEADACHE,Orgasm triggered head pain
-PIRIFORMISSYNDROME,Sciatic nerve compression at deep gluteal area
-PAROXYSMALVERTIGO,Brief spinning episodes
-HYPNICHEADACHE,Alarm clock headache in sleep
-CLAUSTRUM,Thin sheet between insula and putamen
-RETROSPLENIALCORTEX,Navigation and context region
-CANALITHIASIS,Loose particles in semicircular canal
-LANDAUREFLEX,Trunk extension in prone suspension
-APNEAHYPOPNEAINDEX,Sleep apnea severity metric
-IGGSYNTHESISRATE,Index of intrathecal antibody production
-PHALENSTEST,Wrist flexion screens carpal tunnel
-SLEEPLATENCY,Time to fall asleep
-POLYSOMNOGRAPHY,Overnight multi channel recording
-ILIOTIBIALBANDSYNDROME,Lateral knee pain from friction
-HYPERPERFUSION,Excessive blood flow to tissue
-SUPRASCAPULARENTRAPMENT,Compression at suprascapular notch

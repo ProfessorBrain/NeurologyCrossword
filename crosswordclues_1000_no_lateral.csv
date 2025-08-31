@@ -88,11 +88,13 @@ TIC,"Sudden, stereotyped, suppressible movement or sound"
 SPASTICITY,Velocity-dependent increase in muscle tone
 FLACCIDPARALYSIS,Hypotonia and areflexia from lower motor neuron lesion
 FASCICULATION,Visible spontaneous muscle fiber twitch
-MYOTONIA,Delayed relaxation after contraction; grip _____
+MYOTONIA,Delayed relaxation after contraction; grip myotonia
 NEUROMYOTONIA,Continuous muscle fiber activity; Isaacs syndrome
 MYASTHENIAGRAVIS,Fluctuating fatigable weakness; ACh receptor antibodies
 LAMBERTEATON,Proximal weakness improves with exercise; P/Q calcium channel antibodies
 GUILLAINBARRE,Acute inflammatory demyelinating polyradiculoneuropathy
+CIDP,Chronic inflammatory demyelinating polyneuropathy
+MMN,Multifocal motor neuropathy with conduction block
 ALS,Combined upper and lower motor neuron degeneration
 SMA,Genetic anterior horn cell disease; SMN1 deletions
 CARPALTUNNEL,Median neuropathy at the wrist causing nocturnal paresthesias
@@ -126,12 +128,16 @@ CAVERNOUSMALFORMATION,Mulberry lesion with hemosiderin rim on MRI
 ISCHEMICSTROKE,Focal deficit from arterial occlusion
 LACUNARINFARCT,Small deep infarct from lipohyalinosis
 WATERSHEDINFARCT,Borderzone ischemia between arterial territories
-S,Noncontrast CT clue of acute thrombus in M1
+HYPERDENSEMCASIGN,Noncontrast CT clue of acute thrombus in M1
 DENSEBASILARSIGN,Hyperattenuated basilar artery on CT indicating thrombosis
+DOTSIGN,Thrombosed M2 branch seen as hyperdense dot on CT
 ASPECTS,Ten-point CT score for early ischemia in MCA territory
 NIHSS,Standardized scale to quantify stroke severity
-TENECTEPLASE,Fibrin-specific thrombolytic used for stroke
+MRS,Modified Rankin Scale for disability after stroke
+TPA,Alteplase thrombolysis for acute ischemic stroke
+TENECTEPLASE,Fibrin-specific thrombolytic used off-label for stroke
 THROMBECTOMY,Endovascular clot retrieval for large vessel occlusion
+PERFUSIONMISMATCH,CT/MR penumbra-core imbalance guiding therapy
 OSMOTICDEMYELINATION,Central pontine/extrapontine myelinolysis after rapid sodium correction
 WERNICKEENCEPHALOPATHY,"Thiamine deficiency with confusion, ataxia, ophthalmoplegia"
 KORSAKOFF,Amnestic syndrome with confabulation after thiamine deficiency
@@ -142,7 +148,7 @@ POSTERIORREVERSIBLEENCEPHALOPATHY,"Headache, seizures, visual loss with vasogeni
 REVERSIBLECEREBRALVASOCONSTRICTION,Recurrent thunderclap headaches with segmental narrowing
 MELAS,Mitochondrial encephalomyopathy with lactic acidosis and stroke-like episodes
 MERRF,Myoclonic epilepsy with ragged red fibers
-LHON,Hereditary optic neuropathy causing subacute visual loss
+LHON,Leber hereditary optic neuropathy causing subacute visual loss
 CANVAS,"Cerebellar ataxia, neuropathy, vestibular areflexia syndrome"
 FRAGILEXTREMORATAXIA,Late-onset tremor/ataxia from FMR1 premutation
 FAHRDISEASE,Basal ganglia calcifications with movement disorder
@@ -164,6 +170,7 @@ NEUROMYELITISOPTICA,AQP4-IgG astrocytopathy with longitudinal cord lesions
 MOGANTIBODYDISEASE,Inflammatory demyelination targeting myelin oligodendrocyte glycoprotein
 TRANSVERSEMYELITIS,Subacute spinal cord inflammation causing sensory level and weakness
 ACUTEDISSEMINATEDENCEPHALOMYELITIS,Postinfectious demyelination in children
+ADEM,Abbreviation for acute disseminated encephalomyelitis
 BICKERSTAFFENCEPHALITIS,Brainstem encephalitis with ataxia and ophthalmoplegia
 ANTINMDARECEPTOR,Autoimmune encephalitis with psychiatric symptoms and dyskinesias
 LGI1ENCEPHALITIS,Faciobrachial dystonic seizures with hyponatremia
@@ -180,12 +187,15 @@ LANDAUKLEFFNER,Acquired epileptic aphasia of childhood
 BENIGNROLANDICEPILEPSY,Centrotemporal spikes with nocturnal facial motor seizures
 JUVENILEMYOCLONICEPILEPSY,Myoclonic jerks after awakening; good valproate response
 ABSENCEEPILEPSY,Brief staring spells with 3 Hz spike-and-wave
-TEMPORALLOBEEPILEPSY,Focal impaired awareness seizures with dÃ©jÃ  vu and automatisms
+TEMPORALLOBEEPILEPSY,Focal impaired awareness seizures with déjà vu and automatisms
 STATUSEPILEPTICUS,Seizure lasting >5 minutes or recurrent without recovery
+EEG,Electroencephalography; records cortical electrical activity
+MEG,Magnetoencephalography; measures magnetic fields from neuronal currents
+PET,Positron emission tomography for metabolism or receptor imaging
 SPECT,Perfusion imaging used in ictal epilepsy localization
 DATSCAN,Nigrostriatal dopamine transporter imaging
 LUMBARPUNCTURE,Needle CSF access at L3-4 or L4-5 interspace
-OPENINGPRESSURE,First CSF finding measured
+OPENINGPRESSURE,First CSF pressure measured at lumbar puncture
 XANTHOCHROMIA,Yellow CSF supernatant after hemorrhage
 OLIGOCLONALBANDS,CSF-restricted IgG bands suggestive of MS
 ALBUMINOCYTOLOGICDISSOCIATION,High CSF protein with normal cell count in GBS
@@ -202,7 +212,7 @@ BASALFOREBRAIN,Cholinergic nuclei important for attention and memory
 PINEALGLAND,Melatonin-secreting structure causing Parinaud syndrome when enlarged
 PITUITARYGLAND,Endocrine master gland; macroadenomas can compress chiasm
 MIDBRAIN,Mesencephalon; location of red nucleus and substantia nigra
-PONS,Bridge containing cranial nerve nuclei V-VIII
+PONS,Bridge containing cranial nerve nuclei V–VIII
 MEDULLA,Contains vital centers for breathing and heart rate
 CEREBELLUM,Coordinates movement and balance
 DENTATENUCLEUS,Largest deep cerebellar nucleus; output to thalamus
@@ -220,8 +230,8 @@ SUPRAMARGINALGYRUS,Parietal lobe region for phonologic processing
 PRECENTRALGYRUS,Primary motor cortex
 POSTCENTRALGYRUS,Primary somatosensory cortex
 ARCUATEFASCICULUS,White matter tract linking Broca and Wernicke areas
-MEYERSLOOP,Temporal optic radiations causing superior quadrantanopia when lesioned
-BAUMSLOOP,Parietal optic radiations causing inferior quadrantanopia when lesioned
+MEYERLOOP,Temporal optic radiations causing superior quadrantanopia when lesioned
+BAUMLOOP,Parietal optic radiations causing inferior quadrantanopia when lesioned
 SUBARACHNOIDSPACE,CSF-filled compartment between arachnoid and pia
 CHOROIDPLEXUS,CSF-producing epithelium within ventricles
 AQUEDUCTOFSYLVIUS,Cerebral aqueduct connecting third and fourth ventricles
@@ -237,10 +247,14 @@ DWI,MRI sequence sensitive to restricted diffusion in acute stroke
 ADC,Map inverse to DWI; low values in acute infarct
 SWI,MRI sequence highlighting susceptibility from blood or iron
 GRE,Gradient echo sequence; sensitive to microbleeds
+MRA,Noninvasive MR angiography of vessels
+CTA,CT angiography visualizing arterial lumen and thrombus
+CTPERFUSION,Dynamic imaging to estimate core and penumbra
 VESSELWALLMRI,High-resolution imaging of intracranial vasculitis or plaque
 CAROTIDULTRASOUND,Duplex study for stenosis and plaque
 TRANSCRANIALDOPPLER,Ultrasound assessing intracranial velocities and shunts
 EEGMONTAGE,Arrangement of electrodes for scalp recording
+MEP,Motor evoked potential assessing corticospinal tract
 SSEP,Somatosensory evoked potential for dorsal column pathways
 SUMATRIPTAN,Serotonin 5-HT1B/1D agonist for acute migraine
 RIZATRIPTAN,Fast-acting triptan for acute migraine
@@ -297,12 +311,17 @@ SAFINAMIDE,Reversible MAO-B inhibitor with glutamate effects
 ENTACAPONE,COMT inhibitor extending levodopa effect
 TOLCAPONE,COMT inhibitor; hepatotoxicity risk
 OPICAPONE,Once-daily COMT inhibitor
+INHALEDLEVODOPA,Rescue therapy for OFF episodes
 DEEPBRAINSTIMULATION,Surgical therapy targeting STN or GPi
+INTERFERONBETA,Injectable therapy for relapsing MS
 GLATIRAMERACETATE,Co-polymer injection for relapsing MS
-DIMETHYLFUMARATE,Oral therapy for MS; lymphopenia risk
+DIMETHYLFUMARATE,Oral fumarate; lymphopenia risk
+DIROXIMELFUMARATE,Newer fumarate with GI tolerability
 TERIFLUNOMIDE,Oral pyrimidine synthesis inhibitor; teratogenic
 FINGOLIMOD,S1P modulator; first-dose bradycardia monitoring
-NATALIZUMAB,Anti-Î±4 integrin; PML risk stratified by JCV
+SIPONIMOD,S1P modulator approved for SPMS
+OZANIMOD,S1P modulator with less bradycardia
+NATALIZUMAB,Anti-α4 integrin; PML risk stratified by JCV
 OCRELIZUMAB,Anti-CD20 monoclonal antibody; PPMS and RRMS
 OFATUMUMAB,Self-injected anti-CD20 for RRMS
 RITUXIMAB,Off-label anti-CD20 used in MS/NMOSD
@@ -364,6 +383,24 @@ BRUDZINSKISIGN,Hip/knee flexion with neck flexion in meningitis
 HINTSEXAM,"Head impulse, nystagmus, test of skew for acute vestibular syndrome"
 EPLEYMANEUVER,Canalith repositioning for posterior canal BPPV
 DIXHALLPIKE,Provocative test for posterior canal BPPV
+MCASTROKE,Acute infarct in the Middle cerebral artery territory
+MCASYNDROME,Typical deficits of Middle cerebral artery involvement
+MCAOCCLUSION,Thrombotic or embolic blockage of the Middle cerebral artery
+ACASTROKE,Acute infarct in the Anterior cerebral artery territory
+ACASYNDROME,Typical deficits of Anterior cerebral artery involvement
+ACAOCCLUSION,Thrombotic or embolic blockage of the Anterior cerebral artery
+PCASTROKE,Acute infarct in the Posterior cerebral artery territory
+PCASYNDROME,Typical deficits of Posterior cerebral artery involvement
+PCAOCCLUSION,Thrombotic or embolic blockage of the Posterior cerebral artery
+BASILARSTROKE,Acute infarct in the Basilar artery territory
+BASILARSYNDROME,Typical deficits of Basilar artery involvement
+BASILAROCCLUSION,Thrombotic or embolic blockage of the Basilar artery
+CAROTIDSTROKE,Acute infarct in the Internal carotid artery territory
+CAROTIDSYNDROME,Typical deficits of Internal carotid artery involvement
+CAROTIDOCCLUSION,Thrombotic or embolic blockage of the Internal carotid artery
+VERTEBRALSTROKE,Acute infarct in the Vertebral artery territory
+VERTEBRALSYNDROME,Typical deficits of Vertebral artery involvement
+VERTEBRALOCCLUSION,Thrombotic or embolic blockage of the Vertebral artery
 THORACICOUTLETSYNDROME,Compression of brachial plexus or subclavian vessels
 LONGTHORACICNEUROPATHY,Scapular winging from serratus anterior denervation
 SUPRASCAPULARNEUROPATHY,Shoulder pain with infraspinatus weakness
@@ -393,6 +430,7 @@ GALC,Deficiency in Krabbe disease
 ABCD1,Adrenoleukodystrophy peroxisomal transporter
 POLG,Mitochondrial polymerase mutations causing epilepsy and ataxia
 TTR,Transthyretin gene in amyloid neuropathy
+CERVICALSPONDYLOTICMYELOPATHY,Gait imbalance and hand clumsiness from cord compression
 RADICULOPATHY,Dermatomal pain and weakness from nerve root compression
 MYELOPATHY,Spinal cord dysfunction causing long tract signs
 SYRINGOMYELIA,Cavitation of spinal cord with cape-like pain/temperature loss
@@ -418,6 +456,8 @@ CRANIALNERVE9PALSY,Deficit with loss of gag and posterior third taste disturbanc
 CRANIALNERVE10PALSY,Deficit with dysphonia and impaired palate elevation
 CRANIALNERVE12PALSY,Deficit with tongue deviation toward lesion on protrusion
 DOWNBEATNYSTAGMUS,Fast phase downward; cervicomedullary junction localization
+UPBEATNYSTAGMUS,Fast phase upward; medullary localization
+GAZEEVOKEDNYSTAGMUS,Increasing on eccentric gaze; cerebellar
 OPSOCLONUS,Chaotic multidirectional saccades without intersaccadic intervals
 BACLOFEN,GABA-B agonist used for spasticity
 TIZANIDINE,Alpha-2 agonist for spasticity
@@ -437,14 +477,23 @@ TRANSCORTICALMOTORAPHASIA,Nonfluent speech with preserved repetition
 TRANSCORTICALSENSORYAPHASIA,Fluent speech with preserved repetition but poor comprehension
 ANOMICAPHASIA,Word-finding difficulty with otherwise mild deficits
 HOMONYMOUSHEMIANOPIA,Loss of visual field in both eyes
-SUPERIORQUADRANTANOPIA, pie in the sky' visual field defect
-INFERIORQUADRANTANOPIA, pie on the floor' visual field defect
+SUPERIORQUADRANTANOPIA,' pie in the sky' visual field defect
+INFERIORQUADRANTANOPIA,' pie on the floor' visual field defect
 BITEMPORALHEMIANOPIA,Loss of temporal fields from chiasm compression
 BINASALHEMIANOPIA,"Loss of nasal fields; rare, often ocular cause"
 ARTERYOFPERCHERONINFARCT,Bilateral paramedian thalamic infarction pattern
 RECURRENTARTERYOFHEUBNER,Supplies caudate head and anterior internal capsule
 LENTICULOSTRIATEINFARCT,Deep perforator stroke affecting basal ganglia/internal capsule
 ANTERIORCHOROIDALINFARCT,"Hemiparesis, hemisensory loss, homonymous hemianopia"
+PICASTROKE,Infarct of the PICA territory on the side
+PICAINFARCT,Cerebellar/brainstem ischemia in the PICA distribution
+PICASYNDROME,Characteristic deficits from PICA territory involvement
+AICASTROKE,Infarct of the AICA territory on the side
+AICAINFARCT,Cerebellar/brainstem ischemia in the AICA distribution
+AICASYNDROME,Characteristic deficits from AICA territory involvement
+SCASTROKE,Infarct of the SCA territory on the side
+SCAINFARCT,Cerebellar/brainstem ischemia in the SCA distribution
+SCASYNDROME,Characteristic deficits from SCA territory involvement
 FOVILLESYNDROME,Medial pontine lesion with gaze palsy and corticospinal signs
 RAYMONDSYNDROME,Medial pontine infarct with abducens palsy and contralateral hemiparesis
 CLAUDESYNDROME,Midbrain tegmentum lesion with oculomotor palsy and ataxia
@@ -479,7 +528,7 @@ GABABENCEPHALITIS,Limbic encephalitis with seizures; small-cell lung cancer asso
 AMPARECEPTORENCEPHALITIS,Limbic encephalitis with memory loss and seizures
 GFAPASTROCYTOPATHY,Autoimmune meningoencephalomyelitis with radial perivascular enhancement
 KCOMPLEX,EEG waveform seen in stage N2 sleep
-SLEEPSPINDLE,12-14 Hz bursts in stage N2 sleep
+SLEEPSPINDLE,12–14 Hz bursts in stage N2 sleep
 REMATONIA,Paralysis of skeletal muscles during REM sleep
 HYPNAGOGICHALLUCINATIONS,Perceptual experiences at sleep onset
 HYPNOPOMPICHALLUCINATIONS,Perceptual experiences upon awakening
@@ -500,7 +549,7 @@ OPPENHEIMSIGN,Toe extension with tibial crest stroking; UMN sign
 GORDONSIGN,Great toe extension with calf squeeze; UMN sign
 JENDRASSIKMANEUVER,Reinforcement technique for deep tendon reflexes
 HOLMESTREMOR,Low-frequency rest and action tremor after midbrain lesions
-ORTHOSTATICTREMOR,Fast 13-18 Hz tremor causing unsteadiness on standing
+ORTHOSTATICTREMOR,Fast 13–18 Hz tremor causing unsteadiness on standing
 DYSTONICTREMOR,Irregular position-dependent tremor in dystonia
 CAMPTOCORMIA,Marked forward flexion of trunk in Parkinson disease
 PISASYNDROME,Lateral trunk flexion in parkinsonism
@@ -522,6 +571,7 @@ LISSENCEPHALY,Smooth brain with absent or reduced gyri
 PACHYGYRIA,"Broad, reduced number of gyri"
 POLYMICROGYRIA,Excess small gyri with abnormal cortical lamination
 SCHIZENCEPHALY,Gray matter-lined clefts in cerebral hemispheres
+SEEG,Stereoelectroencephalography for invasive seizure localization
 WADATEST,Intracarotid amobarbital procedure for language/memory lateralization
 RESPONSIVENEUROSTIMULATION,Closed-loop device delivering stimulation at seizure onset
 LEWYBODY,Alpha-synuclein inclusion in neurons
@@ -568,7 +618,7 @@ VASOSPASM,Delayed arterial narrowing after subarachnoid hemorrhage
 DELAYEDCEREBRALISCHEMIA,New deficits or infarct after aneurysmal SAH
 NIMODIPINE,Dihydropyridine used to prevent DCI after SAH
 NICARDIPINE,IV calcium-channel blocker for acute BP control in ICH/SAH
-CLEVIDIPINE,Ultra-short-acting calcium-channel blocker for BP control
+CLEVIDIPINE,Ultra–short-acting calcium-channel blocker for BP control
 ICHSCORE,Grading system predicting mortality in intracerebral hemorrhage
 TICISCORE,Reperfusion grading after thrombectomy
 MTICITWOB,Successful reperfusion grade in endovascular therapy
@@ -586,20 +636,37 @@ NUCLEUSSOLITARIUS,Visceral sensory nucleus for taste and baroreception
 EDINGERWESTPHALNUCLEUS,Parasympathetic preganglionic nucleus of CN III
 DORSALMOTORNUCLEUSOFVAGUS,Parasympathetic output to thoracoabdominal viscera
 FACIALCOLLICULUS,Pons floor bump from CN VII fibers looping around CN VI nucleus
-KCNQ2,Neonatal epileptic encephalopathy due to potassium channel mutation
-SCN8A,Sodium channel-related developmental epileptic encephalopathy
-KCNT1,Epilepsy of infancy with migrating focal seizures gene
-CACNA1,Channelopathy causing EA2 and hemiplegic migraine
+DERMATOMET2,Upper medial arm and axilla region
+DERMATOMET3,Upper chest just below clavicles
+DERMATOMET4,Nipple line dermatome
+DERMATOMET5,Mid-chest territory
+DERMATOMET6,Xiphoid level
+DERMATOMET7,Below xiphoid across the trunk
+DERMATOMET8,Upper abdomen region
+DERMATOMET9,Mid-abdomen region
+DERMATOMET10,Umbilicus dermatome
+DERMATOMET11,Lower abdomen region
+DERMATOMET12,Inguinal ligament region
+MYOTOMES2,Knee flexion and plantarflexion contribution
+MYOTOMES3,External anal sphincter function
+MYOTOMES4,Pelvic floor muscles and continence
+MYOTOMES5,Perianal wink reflex contribution
+KCNQ2ENCEPHALOPATHY,Neonatal epileptic encephalopathy due to potassium channel mutation
+SCN8AEPILEPTICENCEPHALOPATHY,Sodium channel-related developmental epileptic encephalopathy
+KCNT1EPILEPSY,Epilepsy of infancy with migrating focal seizures gene
+CACNA1AEPISODICATAXIA,Channelopathy causing EA2 and hemiplegic migraine
+PRRT2MUTATION,Paroxysmal kinesigenic dyskinesia gene
 ATP1A3,Alternating hemiplegia of childhood and rapid-onset dystonia-parkinsonism gene
-SLC2A1,GLUT1 deficiency causing seizures and movement disorder
-AMAN,Acute motor axonal neuropathy variant of Guillain-BarrÃ©
+SLC2A1DEFICIENCY,GLUT1 deficiency causing seizures and movement disorder
+AMAN,Acute motor axonal neuropathy variant of Guillain-Barré
 AMSAN,Acute motor-sensory axonal neuropathy variant of GBS
-POEMS,"Polyneuropathy with organomegaly, endocrinopathy, M protein, skin changes"
+POEMSSYNDROME,"Polyneuropathy with organomegaly, endocrinopathy, M protein, skin changes"
 CANOMAD,Chronic ataxic neuropathy with ophthalmoplegia and cold agglutinins
 HSAN,Hereditary sensory and autonomic neuropathy group of disorders
 KENNEDYDISEASE,X-linked spinal and bulbar muscular atrophy
 APNEATEST,Assessment of brainstem function by CO2 rise without respiratory effort
 OCULOCEPHALICREFLEX,Doll's eyes test for brainstem integrity
+OCULOVESTIBULARREFLEX,Cold caloric testing for brainstem function
 COUGHREFLEX,Tracheal stimulation response absent in brain death
 CORNEALREFLEX,Blink response to corneal touch
 MPTPTOXICITY,Causes parkinsonism via dopaminergic neuron injury
@@ -630,6 +697,7 @@ PLEDS,Periodic lateralized epileptiform discharges on EEG
 GPEDS,Generalized periodic epileptiform discharges
 BURSTSUPPRESSION,Alternating high-voltage bursts and flat intervals on EEG
 TRIPHASICWAVES,EEG pattern seen in metabolic encephalopathy
+PHOTOPAROXYSMALRESPONSE,Spike-wave discharges triggered by photic stimulation
 3HZSPIKEANDWAVE,Classic absence seizure EEG pattern
 HYPSARRHYTHMIA,Chaotic high-amplitude pattern in infantile spasms
 GAMMAKNIFE,Stereotactic radiosurgery device using cobalt-60 beams
@@ -656,11 +724,40 @@ GREATERPETROSALNERVE,Facial nerve branch to pterygopalatine ganglion
 NERVUSINTERMEDIUS,Sensory/parasympathetic component of facial nerve
 GAZEDEVIATION,Eyes deviated toward the in frontal eye field lesion
 NEGLECTONEXTINCTION,Failure to detect stimuli on the with double simultaneous stimulation
-FETALPCA,Posterior cerebral artery arises from internal carotid via PCom
+SENSORYLEVELATT10,Pinprick diminished below umbilicus on the side
+A3SEGMENT,Pericallosal segment of anterior cerebral artery beyond A2
+M3SEGMENT,Opercular branches of middle cerebral artery
+M4SEGMENT,Cortical branches of middle cerebral artery
+P3SEGMENT,Quadrigeminal segment of posterior cerebral artery
+P4SEGMENT,Posterior cerebral artery calcarine branches
+FETALORIGINPCA,Posterior cerebral artery arises from internal carotid via PCom
+THALAMICSTROKE,Infarct predominantly affecting the thalamic region on the
+CAPSULARSTROKE,Infarct predominantly affecting the capsular region on the
+PUTAMINALSTROKE,Infarct predominantly affecting the putaminal region on the
+CAUDATESTROKE,Infarct predominantly affecting the caudate region on the
+PONTINESTROKE,Infarct predominantly affecting the pontine region on the
+MEDULLARYSTROKE,Infarct predominantly affecting the medullary region on the
+OCCIPITALSTROKE,Infarct predominantly affecting the occipital region on the
+PARIETALSTROKE,Infarct predominantly affecting the parietal region on the
+TEMPORALSTROKE,Infarct predominantly affecting the temporal region on the
+FRONTALSTROKE,Infarct predominantly affecting the frontal region on the
+CEREBELLARSTROKE,Infarct predominantly affecting the cerebellar region on the
 DAWSONFINGERS,Ovoid periventricular lesions perpendicular to ventricles in MS
 UFIBERSPARING,Subcortical myelin preservation favoring leukodystrophy over hypoxic change
 BLACKHOLESINMS,T1 hypointense chronic lesions indicating axonal loss
 OPENRINGSIGN,Incomplete ring enhancement suggesting demyelination
+FRONTALLOBEINFARCT,Ischemic injury in the frontal lobe on the
+PARIETALLOBEINFARCT,Ischemic injury in the parietal lobe on the
+TEMPORALLOBEINFARCT,Ischemic injury in the temporal lobe on the
+OCCIPITALLOBEINFARCT,Ischemic injury in the occipital lobe on the
+INSULARLOBEINFARCT,Ischemic injury in the insular lobe on the
+MCABRANCHOCCLUSION,Branch vessel blockage in the MCA territory on the
+ACABRANCHOCCLUSION,Branch vessel blockage in the ACA territory on the
+PCABRANCHOCCLUSION,Branch vessel blockage in the PCA territory on the
+SENSORYLEVELATC2,Pinprick reduced below dermatomal level C2
+SENSORYLEVELATC3,Pinprick reduced below dermatomal level C3
+SENSORYLEVELATC4,Pinprick reduced below dermatomal level C4
+SENSORYLEVELATL1,Pinprick reduced below dermatomal level L1
 HIGHVOLUMETAPTEST,Large-volume lumbar puncture assessing gait improvement in NPH
 CSFFLOWVOIDSIGN,Sagittal T2 flow signal in aqueduct/ventricles in NPH
 CALLOSALANGLE,Smaller angle on coronal MRI supports iNPH
@@ -668,8 +765,20 @@ WERNICKETRIAD,"Confusion, ataxia, ophthalmoplegia due to thiamine deficiency"
 HYPERAMMONEMIA,Elevated ammonia causing encephalopathy
 UREMICENCEPHALOPATHY,Cognitive and neuromuscular dysfunction in renal failure
 HYPOGLYCEMICSEIZURES,Convulsions precipitated by low blood glucose
-RAPIDALTERNATINGMOVEMENTS,Impaired diadochokinesia on fast alternating tasks
-DYSDIADOCHOKINESIA,Impaired rapid alternating movements from cerebellar dysfunction
+FINGERTONOSE,Dysmetria on finger-to-nose testing more on the
+HEELTOSHIN,Ataxia on ipsilateral heel-to-shin test more on the
+RAPIDALTERNATINGMOVEMENTS,Impaired diadochokinesia on fast alternating tasks more on the
+DYSDIADOCHOKINESIA,Impaired rapid alternating movements from cerebellar dysfunction more on the
+TEMPORALPOLEINFARCT,Ischemia involving the temporal pole on the
+INSULAINFARCT,Ischemia involving the insula on the
+ANGULARGYRUSINFARCT,Ischemia involving the angular gyrus on the
+PARACENTRALLOBULEINFARCT,Ischemia involving the paracentral lobule on the
+PRECUNEUSINFARCT,Ischemia involving the precuneus on the
+FUSIFORMGYRUSINFARCT,Ischemia involving the fusiform gyrus on the
+LINGUALGYRUSINFARCT,Ischemia involving the lingual gyrus on the
+PCOMANEURYSM,Aneurysm at the PCom on the side
+ACOMANEURYSM,Aneurysm at the ACom on the side
+MCABIFURCATIONANEURYSM,Aneurysm at the MCA on the side
 CAVERNOUSSINUSTHROMBOSIS,Septic thrombosis causing ophthalmoplegia and chemosis
 CEREBRALVENOUSSINUSTHROMBOSIS,Headache with papilledema from dural sinus clot
 DURALARTERIOVENOUSFISTULA,Abnormal shunt causing pulsatile tinnitus and neuro symptoms
@@ -684,9 +793,11 @@ RAMSAYHUNTSYNDROME,Herpes zoster oticus with facial palsy and ear vesicles
 VESTIBULARMIGRAINE,Recurrent vertigo episodes associated with migraine features
 MALDEDEBARQUEMENT,Persistent rocking sensation after motion exposure
 OSCILLOPSIA,Illusion of visual world bouncing from impaired gaze stabilization
+PERIODICALTERNATINGNYSTAGMUS,Horizontal nystagmus reversing direction every minutes
 OCULOGYRICCRISIS,Upward tonic eye deviation from dopamine blockade
 BLEPHAROSPASM,Involuntary eyelid closure dystonia
 MEIGESYNDROME,Cranial dystonia with blepharospasm and oromandibular dystonia
+LARYNGEALDYSTONIA,Task-specific dysphonia from focal laryngeal dystonia
 CERVICALDYSTONIA,Torticollis from involuntary neck muscle contractions
 WRITERSCRAMP,Task-specific hand dystonia during writing
 TASKSPECIFICDYSTONIA,Abnormal muscle activation limited to specific skilled tasks
@@ -702,7 +813,8 @@ ADIETONICPUPIL,Dilated pupil with poor light response and denervation supersensi
 ARGYLLROBERTSONPUPIL,Small pupils that accommodate but do not react to light
 MARCUSGUNNPUPIL,Relative afferent pupillary defect on swinging flashlight test
 LIGHTNEARDISSOCIATION,Better constriction to near than to light
-MUSK,Muscle-specific kinase antibody in seronegative myasthenia gravis
+MUSKANTIBODY,Muscle-specific kinase antibody in seronegative myasthenia gravis
+LRP4ANTIBODY,Low-density lipoprotein receptor-related protein 4 in MG
 THYMOMA,Anterior mediastinal tumor associated with myasthenia gravis
 SINGLEFIBERJITTER,Increased variability on EMG in neuromuscular junction disorders
 REDUCEDRECRUITMENT,"EMG pattern with fewer, larger motor units in neurogenic lesions"
@@ -753,20 +865,25 @@ DIFFUSEAXONALINJURY,Traumatic shearing injury with microhemorrhages in white mat
 RANCHOLOSAMIGOSSCALE,Ten-level cognitive scale for TBI recovery
 POSTTRAUMATICAMNESIA,Interval of memory loss after head injury
 ANTERIORINTEROSSEOUSSYNDROME,Pure motor median branch palsy with OK sign weakness
-GUYONCANAL,Ulnar nerve compression at wrist canal
+CARPALCOMPRESSIONTEST,Manual pressure over carpal tunnel provokes symptoms
+GUYONCANALSYNDROME,Ulnar nerve compression at wrist canal
 CUBITALTUNNELSYNDROME,Ulnar entrapment at the elbow
 RADIALHEADSUBLUXATION,Nursemaid elbow affecting annular ligament; radial nerve usually spared
 NECKTONGUESYNDROME,Transient C2 neuralgia with tongue dysesthesia on neck movement
 BRACHIORADIALISREFLEX,C6-mediated forearm reflex at radial styloid
-PATELLARREFLEX,L3-L4 mediated knee jerk
-ACHILLESREFLEX,S1-S2 mediated ankle jerk
+PATELLARREFLEX,L3–L4 mediated knee jerk
+ACHILLESREFLEX,S1–S2 mediated ankle jerk
+JAWWOBBLETREMOR,Essential tremor manifestation of cranial musculature
+CEREBELLARREBOUND,Failure to check movement after resistance is released
 ASTASIA,Inability to maintain upright posture despite normal leg strength
 ABASIA,Inability to walk despite preserved leg movements while lying
 THALAMICPAINSYNDROME,Central post-stroke pain after thalamic injury
 ALIENHANDSYNDROME,Complex involuntary movements with loss of agency
 CENTRALCORDHYPEREXTENSION,Disproportionate arm weakness after cervical injury
+BROWNOUTAMAUROSIS,Transient monocular vision loss from retinal ischemia
 AMAUROSISFUGAX,Transient monocular blindness usually from carotid emboli
 ANTERIORISCHEMICOPTICNEUROPATHY,Pale swollen disc with sudden vision loss
+PAPILLITIS,Optic neuritis with disc swelling
 CENTRALRETINALARTERYOCCLUSION,Painless monocular vision loss with cherry-red spot
 CENTRALRETINALVEINOCCLUSION,Painless vision loss with 'blood and thunder' fundus
 MYERSONSIGN,Persistent glabellar tap blink in Parkinson disease
@@ -774,6 +891,8 @@ HINTSPLUS,HINTS exam with new hearing loss to detect stroke in vertigo
 DUKECRITERIAENDOCARDITIS,Neurologic embolic strokes part of complications
 HEIMANNBIELSCHOWSKYPHENOMENON,Head tilt in superior oblique palsy to minimize diplopia
 SKULLBASEOSTEOMYELITIS,Malignant otitis externa causing cranial neuropathies
+LENNOXGASTAUTDROPATTACKS,Atonic seizures causing sudden falls
+JUVENILEABSENCEEPILEPSY,Adolescent onset absence with generalized tonic-clonic seizures
 PHOTOSENSITIVEEPILEPSY,Seizures triggered by flashing lights
 STARTLEEPILEPSY,Reflex seizures precipitated by sudden auditory stimuli
 MUSICOGENICEPILEPSY,Reflex seizures triggered by specific music
@@ -787,442 +906,10 @@ EPISODICATAXIA,Brief spells of ataxia often due to channelopathy
 HEMIPLEGICMIGRAINE,Migraine with transient unilateral weakness
 SPORADICHEMIPLEGICMIGRAINE,Hemiplegic migraine without known familial mutation
 FAMILIALHEMIPLEGICMIGRAINE,CACNA1A-linked migraine with motor aura
+CEREBELLARCOGNITIVEAFFECTIVE,"Syndrome with executive, visuospatial, and affective deficits from cerebellum"
 ALIENLIMBPHENOMENON,Loss of sense of ownership causing unwanted limb movements
-SUBFALCINEHERNIATION,Cingulate gyrus under falx cerebri
-RASMUSSENENCEPHALITIS,Chronic focal epilepsy with inflammation
-PRIONDISEASE,Transmissible spongiform encephalopathy
-FLOWVOID,Signal loss where blood moves fast on T2
-HYPERMOTORSEIZURE,Thrashing or bicycling like movements
-MENSTRUALMIGRAINE,Headache attacks linked to menstrual cycle
-DULOXETINE,SNRI for neuropathic pain
-KRABBELEUKODYSTROPHY,GALC deficiency leukodystrophy
-ABULIA,Severe reduction in drive
-RUBROSPINALTRACT,Extrapyramidal motor pathway
-MALIGNANTHYPERTHERMIA,Anesthetic triggered hypermetabolic crisis
-RETINALMIGRAINE,Monocular visual disturbance with pain
-DISINHIBITION,Socially inappropriate behavior
-PILOCYTICASTROCYTOMA,Benign cerebellar astrocytoma in youth
-DURETHEMORRHAGE,Linear bleed in brainstem with shift
-PARAGANGLIOMA,Extra adrenal neuroendocrine tumor
-CUNEATEFASCICULUS,Dorsal column tract for arms
-CALFPSEUDOHYPERTROPHY,Enlarged calves from muscle tissue change
-MAMMILLARYBODIES,Memory relay damaged in thiamine loss
-FASTIGIALNUCLEUS,Midline deep cerebellar nucleus
-BELLSPALSY,Acute lower motor neuron facial palsy
-NEUROSARCOIDOSIS,Granulomatous inflammation of nervous system
-TRIGEMINALAUTONOMICEPHALALGIA,Group of TAC headache disorders
-SCAPULARWINGING,Medial border lifts from rib cage
-SUBEPENDYMALGIANTCELLASTROCYTOMA,Tuberous sclerosis related mass
-HEMANGIOPERICYTOMA,Vascular tumor once called HPC
-COLLAGENSIXMYOPATHY,Extracellular matrix myopathy group
-PRISMADAPTATION,Optical therapy for neglect
-CRESTENTSIGN,Subdural shape on CT
-MYOFIBRILLARMYOPATHY,Z disk protein aggregate myopathy
-PRIMARYTHUNDERCLAPHEADACHE,Sudden severe pain resembling SAH
-ENTORHINALCORTEX,Gateway to hippocampus
-PSEUDODEMENTIA,Depression related cognitive deficits
-VENTRALPOSTEROLATERALNUCLEUS,Thalamic relay for body sensation
-HYPERSOMNOLENCE,Excess daytime sleepiness
-ANOSODIAPHORIA,Indifference to neurologic deficit
-APATHY,Lack of motivation for goal actions
-SPOTSIGN,CTA contrast pooling within bleed
-MOLARTOOTHSIGN,Sign in Joubert malformation
-ICTALAUTONOMICCHANGES,Pulse or pupils change during seizures
-SPIKEWAVE,Generalized 3 Hz morphology
-INTRACRANIALATHEROSCLEROSIS,Plaque buildup inside brain arteries
-CENOBAMATE,Newer sodium blocker for focal seizures
-ICEPICKHEADACHE,Short stabbing cranial pain
-NEWDAILYPERSISTENTHEADACHE,Headache beginning abruptly and daily
-EMERYDREIFUSS,Laminopathy with contractures
-FOOTDROP,High stepping due to dorsiflexor loss
-DYSEMBRYOPLASTICNEUROEPITHELIAL,Childhood cortical epilepsy tumor
-OCULARMYASTHENIA,Weakness limited to extraocular muscles
-PENUMBRA,Hypoperfused but salvageable tissue
-OPHTHALMOPLEGICMIGRAINE,Ocular motor neuropathy with migraine
-VENOUSSINUSTHROMBOSIS,Clot in dural drain channels
-ALEXANDERLEUKOENCEPHALOPATHY,GFAP mutation leukodystrophy
-GRACILEFASCICULUS,Dorsal column tract for legs
-CENTRALCOREDISEASE,RYR1 related congenital myopathy
-HOMOCYSTINURIA,Thrombotic risk with lens dislocation
-PROSODYIMPAIRMENT,Abnormal rhythm of speech
-ADRENOLEUKODYSTROPHY,Very long chain fatty acid disorder
-INTENTIONTREMOR,Shaking with outstretched arms
-CSFRHINORRHEA,Clear nasal fluid from CSF leak
-LATERALFEMORALCUTANEOUSNEUROPATHY,Sensory loss anterolateral thigh
-CENTRALNEUROCYTOMA,Intraventricular neuronal tumor
-MONONEURITISMULTIPLEX,Patchy painful multiple nerve deficits
-PANAYIOTOPOULOSSYNDROME,Early onset visual seizures in kids
-COREINFARCTVOLUME,Estimate of dead brain tissue
-GHOSTINGARTIFACT,Repeated faint replicas in phase
-CATAPLEXYATTACK,Emotion triggered loss of tone
-DYSTONICPOSTURE,Task specific hand dystonia
-CONSTRUCTIONALAPRAXIA,Impaired block design type tasks
-NEUROREHABILITATION,Therapy after brain or spine injury
-PHOTOPSIA,Perception of flashes of light
-CALLOSOTOMY,Resection of corpus callosum
-LEPTOMENINGEALCOLLATERALS,Pial channels recruited in ischemia
-APRAXIAOFSPEECH,Motor planning for speech impaired
-INSOMNIA,Persistent difficulty initiating sleep
-VAOVASALSYNCOPE,Common faint due to reflex loop
-NEMALINEMYOPATHY,Rod bodies on muscle biopsy
-INFERIORLONGITUDINALFASCICULUS,Occipito temporal visual pathway
-LATERALGENICULATEBODY,Visual thalamic relay nucleus
-INTRACRANIALHYPERTENSION,Elevated intracranial pressure
-HEREDITARYATAXIA,Inherited gait and coordination disorder
-RACOONEYES,Periorbital ecchymoses sign
-VENTRALPOSTEROMEDIALNUCLEUS,Thalamic relay for face sensation
-SERONEGATIVEMYASTHENIA,Autoimmune fatigue without AChR antibodies
-POSTURALTREMOR,Abnormal sustained posture
-NONREMAROUSALDISORDERS,Confusional arousals and sleepwalking
-APMERIDIAN,Visual field meridian for perimetry
-SEMANTICDEMENTIA,Loss of word meaning with fluent speech
-CIRCADIANPHASEDELAY,Delayed internal clock timing
-LARGEFIBERNEUROPATHY,Loss of vibration and numbness
-PITOLISANT,Histamine three inverse agonist for narcolepsy
-VENTRALTEGMENTALAREA,Dopamine neurons of midbrain
-HERPESSIMPLEXENCEPHALITIS,Temporal lobe encephalitis
-HYPNAGOGICHALLUCINATIONS,Vivid perceptions at sleep onset
-TONGUEATROPHY,Wasting of lingual musculature
-RILUZOLE,ALS medication modest survival benefit
-ARMODAFINIL,Longer acting modafinil isomer
-PARAHIPPOCAMPALGYRUS,Medial temporal cortical area
-CONTUSIONCOUNTERCOUP,Bruise opposite the impact site
-ATYPICALTERATOIDRHABDOID,Highly malignant pediatric tumor
-ECHOLALIA,Repeating words just heard
-PAROXSYSMALHEMICRANIA,Short unilateral attacks; indomethacin responsive
-SPINOCEREBELLARTRACT,Proprioceptive cerebellar fibers
-SUBDURALGRID,Strip electrodes for seizure mapping
-POSTPRANDIALHYPOTENSION,Low pressure after meals in elderly
-AMOTROPHY,Painful proximal weakness in diabetes
-CAPILLARYTELANGIECTASIA,Small capillary vascular anomaly
-ENVIRONMENTALDEPENDENCE,Automatic use of nearby objects
-TIGERSTRIPEPONS,Striped pontine T2 pattern
-MICROGRAPHIA,Start hesitation while walking
-FESTINATION,Reduced facial expressiveness
-CADASIL,NOTCH3 related small vessel strokes
-MEDIALGENICULATE,Auditory thalamic relay nucleus
-OPTOKINETICNYSTAGMUS,Reflex eye movements to moving stripes
-ANAPLASTICASTROCYTOMA,Grade three astrocytic tumor
-BETHLEMYOPATHY,COL6 related congenital weakness
-HYPERKINESIA,Syndrome of basal ganglia
-SUBACUTESCLEROSINGPANENCEPHALITIS,Persistent measles related encephalitis
-AKINESIA,Slowness of voluntary movement
-MEDIALLEMNISCUS,Ascending touch pathway
-ECHOPRAXIA,Imitation of another's movements
-LEIGHENCEPHALOPATHY,Mitochondrial complex issue in infancy
-NUCLEUSBASALIS,Cholinergic source for cortex
-DURALTAIL,Enhancing connection in meningioma
-TECTOSPINALTRACT,Head and eye reflex pathway
-ALCOHOLICNEUROPATHY,Distal symmetric pain due to ethanol
-HEREDITARYNEUROPATHY,Inherited nerve fiber disorder
-PALILALIA,Repetitive automatic speech syllables
-UNCALHERNIATION,Medial temporal lobe through tentorial notch
-ATHETOSIS,Snake like distal movements
-VZVGANGLIONITIS,Sensory ganglion inflammation by VZV
-SUNCT,Short attacks with tearing and redness
-HORNERS,Ptosis miosis anhidrosis together
-EDARAVONE,Free radical scavenger for ALS
-DEUTETRABENAZINE,VMAT2 inhibitor with deuterium
-PULVINAR,Thalamic visual attention nucleus
-TRAMTRACKCALCIFICATIONS,Calcifications in Sturge Weber
-CHOROIDPLEXUSPAPILLOMA,Ventricular tumor from choroid epithelium
-DURALSINUSFISTULA,Abnormal shunt in dura mater
-NUCLEUSRAPHEMAGNUS,Serotonin cell group in medulla
-CERVICOGENICHEADACHE,Headache from neck structures
-SUPRACHIASMATICNUCLEUS,Master clock of circadian rhythm
-UNCINATEFASCICULUS,Temporal frontal connector
-IDEOMOTORAPRAXIA,Difficulty performing learned gestures
-COTARDSYNDROME,Delusion of being already dead
-TETRABENAZINE,VMAT2 inhibitor for chorea
-ADIE,Dilated pupil with poor light response
-NORTRIPTYLINE,TCA for neuropathic pain
-NEUROFIBROMATOSIS1,Genetic tumor syndrome type 1
-ICHSCORE,Score predicting hemorrhage outcome
-LOGOPENICAPHASIA,Word retrieval variant of language loss
-BATTLESSIGN,Postauricular ecchymosis sign
-BRAINDEATHTESTING,Assessment protocol for no brain function
-MOTIONARTIFACT,Blur from patient movement
-ALPERSHUTTENLOCHER,POLG related epileptic encephalopathy
-PUREAUTONOMICFAILURE,Neurodegenerative autonomic failure
-PLEXIFORMNEUROFIBROMA,Nerve tumor with bag of worms feel
-WESTNILE,Flaccid paralysis virus with anterior horn loss
-SCIATICA,Leg pain due to nerve root irritation
-NECROTIZINGAUTOIMMUNEMYOPATHY,Statin or SRP antibody related weakness
-RABIESENCEPHALITIS,Hydrophobia and aerophobia with encephalitis
-INFERIOROLIVE,Medullary olive involved in learning
-IDIOPATHICHYPERSOMNIA,Long sleep time with sleep inertia
-ARTERIALDISSECTION,Intimal tear of cervical vessel
-NEONATALMYASTHENIA,Transient weakness in newborn of MG mother
-MIDDLEMENINGEALARTERY,Artery linked to epidural hemorrhage
-RATHKECLEFTCYST,Sellar cyst of pars intermedia
-MODAFINIL,Wakefulness promoting agent
-SPINOCEREBELLARATAXIA,Group of polyglutamine ataxias
-FOCALTOBILATERALTONICCLONIC,Spread from focal onset to both sides
-OPHTHALMOPARESIS,Limited range of eye movements
-PML,JC virus infection of brain
-CANAVAN,ASPA deficiency white matter disease
-LATERALLEMNISCUS,Auditory brainstem pathway
-MORTONNEUROMA,Plantar nerve lesion between toes
-NEUROFIBROMATOSIS2,Genetic tumor syndrome type 2
-HYPOMIMIA,Classic thumb finger tremor
-TIMEOFLIGHTANGIOGRAPHY,Non contrast MRA method
-TOXOPLASMOSIS,Multiple ring enhancing lesions in AIDS
-REMSLEEPBEHAVIORDISORDER,Acting out dreams due to no atonia
-PERIODICLIMBMOVEMENTSLEEP,Repetitive kicks during sleep
-SLEEPPARALYSIS,Transient inability to move on waking
-OCCIPITALNEURALGIA,Posterior scalp pain from nerve
-KLEINELEVIN,Recurrent hypersomnia cycles
-SUNASYNDROME,Short head pain attacks with autonomic signs
-CHOREOATHETOSIS,Excess of involuntary motions
-DIFFUSEMIDLINGLIOMA,H3K27 altered diffuse brain tumor
-SCOTOMABLINK,Blind spot perception during blink
-EVEROLIMUS,mTOR inhibitor for tuberous sclerosis
-FATIGABLEDIPLOPIA,Double vision worsens with use
-CUSHINGTRIAD,Hypertension bradycardia irregular breaths
-OROMANDIBULARDYSTONIA,Single body region dystonia
-FRONTALLOBESYNDROME,Dysexecutive behavioral pattern
-FOCALDYSTONIA,Soft palate rhythmic jerks
-MYORHYTHMIA,Unilateral facial contractions
-CONVERGENCEINSUFFICIENCY,Difficulty maintaining near vision
-TARSALTUNNELSYNDROME,Posterior tibial nerve entrapment
-HABENULA,Epithalamic relay near pineal
-ICTALSCREAM,Sharp cry at seizure beginning
-ELECTRICALIMPEDANCE,Skin response to applied current
-HOFMANNREFLEX,Finger flexion with flick to nail
-APIXABAN,Factor Xa inhibitor
-ACUTEDEM,Acute disseminated encephalomyelitis
-DRAVETSYNDROME,SCN one A related epilepsy
-GLATIRAMER,Random copolymer for MS
-SPURLINGTEST,Neck extension rotation reproduces radicular pain
-ANTERIORCEREBRALARTERY,Supplies medial frontal and parietal lobes
-STRAIGHTSINUS,Dural venous channel to confluence
-PARSONAGETURNER,Acute brachial neuritis severe pain
-ARACHNOIDGRANULATIONS,Sites of CSF absorption
-POSTERIORCEREBRALARTERY,Supplies occipital and inferior temporal lobes
-DABIGATRAN,Direct thrombin inhibitor
-ROMBERGTEST,Sway with eyes closed feet together
-BACLOFENPUMP,Implanted spasticity therapy
-PYRIDOSTIGMINE,Acetylcholinesterase blocker
-ASPIRIN,Irreversible COX inhibitor
-RIVAROXABAN,Oral factor Xa inhibitor
-CLOPIDOGREL,P2Y12 antiplatelet agent
-POSTHERPETICNEURALGIA,Chronic neuropathic pain after shingles
-RESTLESSLEGSSYNDROME,Urge to move limbs at night
-FORAMENOFMONRO,Connects lateral to third ventricle
-NEUROBEHCET,Systemic vasculitis with neurologic lesions
-LENNOXGASTAUT,Severe childhood epilepsy with multiple seizure types
-VERTEBRALARTERY,Supplies posterior circulation
-MILLERFISHERSYNDROME,Ophthalmoplegia areflexia ataxia
-SYRINGOBULBIA,Fluid cavity extends into brainstem
-TICAGRELOR,Reversible P2Y12 blocker
-NALOXONE,Opioid receptor antagonist
-FLUMAZENIL,Benzodiazepine reversal agent
-MOYAMOYA,Progressive steno occlusive arteriopathy
-BASILARARTERY,Formed by vertebral arteries
-ICEPACKTEST,Quick cooling improves ptosis in MG
-INTERNALCAROTIDARTERY,Supplies anterior circulation
-ETHOSUXIMIDE,First line for absence
-MOCA,Ten minute screen for cognition
-WARFARIN,Vitamin K antagonist
-ANTERIORCHOROIDALARTERY,Small branch to optic tract and capsule
-OPTICATROPHY,Pale optic disc from axon loss
-ANOSMIA,Loss of smell sensation
-AGEUSIA,Loss of taste sensation
-HYPOGEUSIA,Reduced taste perception
-DYSGEUSIA,Distorted taste perception
-AGEUSIASECONDARY,Taste loss due to another condition
-ADYNAMIA,Marked lack of strength
-APALLICSYNDROME,Wakefulness without awareness
-ANHEDONIA,Inability to feel pleasure
-ANERGIA,Pathological lack of energy
-DYSPHASIA,Impaired language function
-ANOMIA,Difficulty retrieving words
-DYSPHONIA,Abnormal voice quality
-PARAPARESIS,Weakness of both legs
-QUADRIPARESIS,Weakness of all four limbs
-PARAPLEGIA,Paralysis of both legs
-HYPERESTHESIA,Increased sensitivity to touch
-HYPOESTHESIA,Reduced sensitivity to touch
-ALLODYNIA,Pain from normally nonpainful touch
-HYPERALGESIA,Increased pain from painful stimuli
-ANALGESIA,Loss of pain perception
-BOTULISM,Neurotoxin blocking acetylcholine release
-CAUDAEQUINASYNDROME,Saddle anesthesia with areflexic bladder
-NEUROPATHICPAIN,Burning or shooting pain quality
-AUTONOMICDYSFUNCTION,Blood pressure and heart rate issues
-MILLARDSYNDROME,Pons lesion with facial and abducens
-MAPT,Tau gene linked to FTLD
-METASTASIS,Secondary brain tumor
-BENEDIKT,Midbrain lesion with tremor and ataxia
-SCN1A,Sodium channel gene for epilepsy
-SYRINX,Fluid cavity within spinal cord
-GRN,Progranulin gene in FTD
-SCN8A,Sodium channel epileptic encephalopathy
-KCNQ3,Potassium channel gene
-PARINAUD,Upgaze palsy from dorsal midbrain
-CACNA1A,Calcium channel related to EA2
-FRAGILEX,CGG repeat with intellectual disability
-KCNA1,Potassium channel for episodic ataxia
-SCN2A,Channel gene linked to seizures
-SPINALSTENOSIS,Narrowed canal with neurogenic claudication
-EMG,Electromyography test
-KCNT1,Gene for migrating seizures of infancy
-PINEOCYTOMA,Pineal parenchymal tumor
-DYSEMBRYOPLASTICTUMOR,Epilepsy associated cortical lesion
-BROWNSQUARD,Hemisection cord pattern of deficits
-TENSIONHEADACHE,Band like head pain
-SUBDURALHYGROMA,CSF collection beneath dura
-CEREBRALPALSY,Nonprogressive neurologic disorder from birth
-TICS,Brief repetitive movements or sounds
-DYSLEXIA,Reading difficulty disorder
-DYSCALCULIA,Math processing difficulty
-DYSGRAPHIA,Writing difficulty
-GAITATAXIA,Unsteady walking pattern
-SENSORYATAXIA,Unsteady from loss of proprioception
-CEREBELLARATAXIA,Unsteady from cerebellar disease
-PROPRIOCEPTIVELOSS,Impaired joint position sense
-ASTERIXIS,Negative myoclonus at wrist
-BALLISMUS,Violent flinging movements
-ISAACSSYNDROME,Neuromyotonia with myokymia
-MYOTONICDYSTROPHY,Delayed muscle relaxation disease
-DUCHENNEMUSCULARDYSTROPHY,X linked dystrophinopathy severe
-BECKERMUSCULARDYSTROPHY,Milder dystrophinopathy
-FACIOSCAPULOHUMERALDYSTROPHY,Scapular winging and facial weakness syndrome
-GNEMYOPATHY,Hereditary inclusion body myopathy
-PARAMYOTONIACONGENITA,Cold induced muscle stiffness
-ANDERSENTAWILSYNDROME,Periodic paralysis with dysrhythmia
-HYPERKALEMICPARALYSIS,Attacks with high potassium
-HYPOKALEMICPARALYSIS,Attacks with low potassium
-NEUROBRUCELLOSIS,Zoonotic infection of nervous system
-NEUROWHIPPLE,Tropheryma disease with oculomasticatory myorhythmia
-B12DEFICIENCY,Cause of subacute combined degeneration
-THIAMINEDEFICIENCY,Cause of Wernicke encephalopathy
-COPPER,Posterolateral column dysfunction; deficiency myelopathy
-MANGANESE,Basal ganglia metal toxicity
-LUXURYHYPERPERFUSION,Post ischemic flow increase
-FWAVE,Proximal motor conduction response
-ALPHARHYTHM,Posterior dominant EEG rhythm
-BETARHYTHM,Fast EEG activity
-DELTAWAVE,Slow EEG activity
-SYNAPSE,Junction between neurons
-AXON,Long projection of neuron
-DENDRITE,Branching input structure
-MYELIN,Insulating sheath of axons
-NODEOFRANVIER,Gap enabling saltatory conduction
-ACTIONPOTENTIAL,Rapid depolarization event
-PRKN,Parkin gene for early PD
-LRRK2,Kinase gene linked to PD
-TARDBP,TDP 43 gene for ALS
-FUS,RNA binding gene in ALS
-VCP,Multisystem proteinopathy gene
-SETX,ALS with ataxia gene
-FIG4,Gene linked to CMT and ALS
-GIANTCELLARTERITIS,Vasculitis risking vision loss
-MOTORNEURONDISEASE,ALS spectrum disorder
-ACETYLCHOLINESTERASE,Breaks down acetylcholine
-CARNITINEPALMITOYLTRANSFERASE,Fatty acid shuttle enzyme
-DYSEXECUTIVESYNDROME,Poor planning and set shifting
-TRACTOGRAPHY,Reconstruction of white matter tracts
-DIRECTPATHWAY,Facilitates movement via basal ganglia
-MOSSYFIBER,Granule cell input 
-MONOAMINEOXIDASEB,Deaminates dopamine
-CFIBERS,Slow unmyelinated pain fibers
-BRAINSTEMAUDITORYEVOKED,Click stimulus brainstem response
-T2HYPERINTENSITIES,White matter bright spots
-VISUALEVOKEDPOTENTIAL,Pattern reversal occipital response
-DEFAULTMODENETWORK,Rest state medial network
-GLUTAMATEDECARBOXYLASE,Makes GABA from glutamate
-PERIAQUEDUCTALGRAY,Descending pain control region
-NEUROGENESIS,Birth of new neurons
-ADELTA,Fast myelinated pain fibers
-CHOLINEACETYLTRANSFERASE,Synthesizes acetylcholine
-AUDITORYNETWORK,Temporal primary system
-SPINORETICULARPATHWAY,Arousal related pain pathway
-ORBITOFRONTALSYNDROME,Disinhibition and impulsivity
-HYPOMYELINATION,Globally thin myelin
-PERIVENTRICULARLEUKOMALACIA,Preterm white matter injury
-SACCADICINTRUSIONS,Square wave jerks on fixation
-DOPADECARBOXYLASE,Converts L DOPA to dopamine
-SUBSTANCEP,Neuropeptide in pain afferents
-VENTRALATTENTIONNETWORK,Reorienting attention system
-MONOAMINEOXIDASEA,Deaminates serotonin and NE
-SUSCEPTIBILITYWEIGHTEDIMAGING,Sensitive to iron and blood
-INDIRECTPATHWAY,Inhibits competing movement
-TYROSINEHYDROXYLASE,Rate limiting for catecholamines
-NOCICEPTOR,Receptor for painful stimuli
-OPIOIDRECEPTOR,Morphine like drug target
-COENZYMEQDEFICIENCY,Ubiquinone shortage disorder
-DYSMYELINATION,Abnormal myelin formation
-VISUALNETWORK,Occipital primary system
-FRONTOPARIETALNETWORK,Executive control network
-SYNAPTOGENESIS,Formation of synapses
-CUPULA,Gel over vestibular hair cells
-SYMPATHETICSKINRESPONSE,Palmar electrodermal change
-AXONALSPHEROIDS,Swollen axons in leukodystrophy
-PYRUVATEDEHYDROGENASEDEFICIENCY,Congenital lactic acidosis
-MEGALENCEPHALICLEUKOENCEPHALOPATHY,Vacuolating leukodystrophy
-PHOTICDRIVING,Occipital rhythm to flash
-AXONLOSSNEUROPATHY,Reduced amplitudes on NCS
-MITOCHONDRIALENCEPHALOMYOPATHY,Mitochondrial brain muscle disease
-DIFFUSIONTENSORIMAGING,Maps white matter directions
-NEURULATION,Formation of neural tube
-ADULTPOLYGLUCOSANBODYDISEASE,GBE1 deficiency disorder
-CATECHOLOMETHYLTRANSFERASE,Degrades catecholamines
-HEADIMPULSETEST,Test for vestibular neuritis
-SUDOMOTORTESTING,Sweat function assessment
-HABITUATION,Reduced response to repeated stimulus
-TRYPTOPHANHYDROXYLASE,Rate limiting for serotonin
-HEMISPATIALNEGLECT,Ignores one hemispace
-LEUKOARAIOSIS,Age related white matter change
-SEMICIRCULARCANALS,Sense angular acceleration
-NEUROTRANSMITTER,Chemical messenger in synapse
-DELTAWAVES,Slow sleep rhythm
-MURHYTHM,Central arch shaped rhythm
-KCOMPLEXES,N2 sleep waveform
-SLEEPSPINDLES,12 to 15 Hz bursts in N2
-EPILEPTIFORMDISCHARGE,Spike or sharp wave pattern
-POSTICTALSTATE,Period after a seizure
-SEPTALNUCLEI,Cholinergic forebrain group
-BABINSKIRESPONSE,Toe extension in infants is normal
-PALMARGRASP,Infant hand closing on touch
-PLAGIOCEPHALY,Skull asymmetry from positioning
-TRIGGERFINGER,Stenosing flexor tenosynovitis
-UNCUS,Medial temporal hook shaped structure
-ASPECTS,Early ischemia score on CT
-VESTIBULARNUCLEI,Brainstem balance centers
-FIBRILLATIONPOTENTIAL,Spontaneous single muscle fiber spike
-MYELINBASICPROTEIN,Marker of active demyelination
-INTERFERENCEPATTERN,Full EMG at maximal effort
-UTRICLE,Otolith organ sensing horizontal acceleration
-ASYMMETRICTONICNECKREFLEX,Fencer posture in infants
-DEVELOPMENTALDYSPRAXIA,Childhood motor planning difficulty
-PERIRHINALCORTEX,Object memory association area
-DEQUERVAINSTENOSYNOVITIS,Thumb tendon sheath inflammation
-POSITIVEWAVESHARP,Denervation waveform on EMG
-CSFOBSTRUCTION,Blockage affecting fluid flow
-MOROREFLEX,Infant startle like response
-PIRIFORMCORTEX,Primary olfactory cortex
-ROOTINGREFLEX,Infant turns to cheek touch
-BRACHIALPLEXUSBIRTHINJURY,Neonatal upper limb weakness
-SUBICULUM,Hippocampal output region
-POPLITEALENTRAPMENT,Vascular and nerve compression behind knee
-FROINSSYNDROME,High protein with low flow CSF
-NEUROMUSCULARBLOCKADE,Loss of transmission at junction
-DECREMENTALRESPONSE,Drop on low frequency RNS
-SLEEPINERTIA,Grogginess on awakening
-PRIMARYSEXUALHEADACHE,Orgasm triggered head pain
-PIRIFORMISSYNDROME,Sciatic nerve compression at deep gluteal area
-PAROXYSMALVERTIGO,Brief spinning episodes
-HYPNICHEADACHE,Alarm clock headache in sleep
-CLAUSTRUM,Thin sheet between insula and putamen
-RETROSPLENIALCORTEX,Navigation and context region
-CANALITHIASIS,Loose particles in semicircular canal
-LANDAUREFLEX,Trunk extension in prone suspension
-APNEAHYPOPNEAINDEX,Sleep apnea severity metric
-IGGSYNTHESISRATE,Index of intrathecal antibody production
-PHALENSTEST,Wrist flexion screens carpal tunnel
-SLEEPLATENCY,Time to fall asleep
-POLYSOMNOGRAPHY,Overnight multi channel recording
-ILIOTIBIALBANDSYNDROME,Lateral knee pain from friction
-HYPERPERFUSION,Excessive blood flow to tissue
-SUPRASCAPULARENTRAPMENT,Compression at suprascapular notch
+PICAANEURYSM,Saccular dilation of the PICA on the
+PICATHROMBOSIS,Occlusive clot in the PICA on the
+PICADISSECTION,Intimal tear of the PICA on the
+AICAANEURYSM,Saccular dilation of the AICA on the
+AICATHROMBOSIS,Occlusive clot in the AICA on the
