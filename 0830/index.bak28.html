@@ -24,8 +24,8 @@
     .open.revealed.active { background: #e9d5ff !important; }
     .open.revealed span { color: #4c1d95; }
     .num { position: absolute; top: 2px; left: 4px; font-size: 10px; opacity: .7; }
-    .btn { background:#fff; border:1.5px solid #000; padding:.55rem .9rem; border-radius:.7rem; cursor:pointer; box-shadow: 0 1px 0 rgba(0,0,0,0.05); transition: transform .05s ease, box-shadow .2s ease; }
-    .btn:hover { background:#f5f5f5; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .btn { background:#fff; border:1px solid #000; padding:.5rem .75rem; border-radius:.5rem; cursor:pointer; }
+    .btn:hover { background:#f5f5f5; }
     .btn.reveal { background:#f5f3ff; border-color:#7c3aed; }
     .btn.reveal:hover { background:#ede9fe; }
     .credit { padding-top: 8px; font-size: 12px; opacity: .7; text-align: right; }
@@ -64,19 +64,7 @@
     .clue.selected { background: #e6f9ed; border-bottom-color: #cdebd9; border-radius: 8px; }
     .cell.inword:not(.revealed):not(.locked) { outline: 2px solid #86efac; outline-offset: -2px; }
     .clue.done .clue-text { text-decoration: line-through; opacity: 0.7; }
-  
-    .btnrow { 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      gap: 10px; 
-      flex-wrap: wrap; 
-      width: 100%;
-      margin: 12px 0 2px 0;
-    }
-    
-    .btn.reveal.active { box-shadow: 0 0 0 2px #7c3aed inset; }
-</style>
+  </style>
 </head>
 <body>
   <div id="root" class="container"></div>
@@ -844,7 +832,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                   </ul>
                 </div>
 
-                <div className="btnrow">
+                <div style={{marginTop:'12px', display:'flex', gap:'8px', alignItems:'center', flexWrap:'wrap'}}>
                   <button id="revealBtn" className={'btn reveal' + (revealMode ? ' active' : '')} onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
                   <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
