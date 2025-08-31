@@ -894,7 +894,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
       const showStatus = loading || error || !bank.length;
       return (
         <>
-          <header className="title"><div>Neurology Crossword Puzzler</div><div></div></header>
+          <header className="title"><div>📰 Neurology Crossword Puzzler</div><div></div></header>
 
           {showOptions && (
             <div className="overlay" onClick={(e)=>{ if (e.target===e.currentTarget) setShowOptions(false); }}>
