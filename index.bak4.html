@@ -24,11 +24,11 @@
     .open.revealed.active { background: #e9d5ff !important; }
     .open.revealed span { color: #4c1d95; }
     .num { position: absolute; top: 2px; left: 4px; font-size: 10px; opacity: .7; }
-    .btn { background:#fff; border:1.5px solid #000; padding:.55rem .9rem; border-radius:.7rem; cursor:pointer; box-shadow: 0 1px 0 rgba(0,0,0,0.05); transition: transform .05s ease, box-shadow .2s ease; }
+    .btn { font-family: "Courier New", Courier, monospace; background:#fff; border:1.5px solid #000; padding:.55rem .9rem; border-radius:.7rem; cursor:pointer; box-shadow: 0 1px 0 rgba(0,0,0,0.05); transition: transform .05s ease, box-shadow .2s ease; }
     .btn:hover { background:#f5f5f5; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
     .btn.reveal { background:#f5f3ff; border-color:#7c3aed; }
     .btn.reveal:hover { background:#ede9fe; }
-    .credit { display:block; width:100%; padding-top: 8px; font-size: 12px; opacity: .7;   text-align:center; }
+    .credit { text-align:center; padding-top: 8px; font-size: 12px; opacity: .7; }
     .hint { font-size: 12px; color:#4c1d95; padding-left:8px; }
     .error { color:#b91c1c; font-weight:600; }
     #errOverlay { position: fixed; inset: 0; background: rgba(255,255,255,.96); color:#111; padding: 16px; z-index: 99999; display:none; }
@@ -40,12 +40,11 @@
     .clue-text { flex: 1; }
     /* Modal */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index: 10000; }
-    .modal { font-family: 'Courier New', Courier, monospace; background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+    .modal { background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
     .modal h3 { margin: 0 0 8px 0; font-size:18px; }
     .modal .row { display:flex; gap:10px; align-items:center; padding:8px 0; }
-    .modal .slider{ width:100%; }
-    .actions { display:flex; gap:8px; justify-content:flex-end; padding-top:12px; }
-    .input { background:#fff; border:1px solid #000; padding:.5rem .5rem; border-radius:.5rem; width:100%; box-sizing:border-box; }
+    .modal .actions { display:flex; gap:8px; justify-content:flex-end; padding-top:12px; }
+    .input { flex:1; min-width:0; background:#fff; border:1px solid #000; padding:.5rem .5rem; border-radius:.5rem;  box-sizing:border-box; }
 
     /* Ensure clue text is left-aligned */
     .cluecard, .cluecard * { text-align: left; }
@@ -77,7 +76,6 @@
     }
     
     .btn.reveal.active { box-shadow: 0 0 0 2px #7c3aed inset; }
-  .btn, .btnrow button, button { font-family: 'Courier New', Courier, monospace; }
 </style>
 </head>
 <body>
@@ -151,25 +149,7 @@
         let cancelled=false;
         fetch('crosswordclues.csv')
           .then(r=>{ if (!r.ok) throw new Error('CSV not found'); return r.text(); })
-          .then(txt=>{
-            if (cancelled) return;
-            const lines = txt.split(/\r\n|\n|\r/).filter(Boolean);
-            const rows = [];
-            for (let raw of lines){
-              let line = raw.trim();
-              if (!line) continue;
-              const idx = line.indexOf(',');
-              if (idx === -1) continue;
-              let ans = line.slice(0, idx).trim();
-              let clue = line.slice(idx+1).trim();
-              if (ans.startsWith('"') && ans.endsWith('"')) ans = ans.slice(1,-1);
-              if (clue.startsWith('"') && clue.endsWith('"')) clue = clue.slice(1,-1);
-              const answer = ans.replace(/[^A-Za-z]/g,'').toUpperCase();
-              if (!answer) continue;
-              rows.push({answer, clue});
-            }
-            if (rows.length === 0) throw new Error('CSV parsed but no valid rows.');
-            setBank(rows);
+          .then(txt=>{ if (cancelled) return; const parsed=parseCSVTwoCols(txt); if (parsed.length){ setBank(parsed.map(x=>({answer:x.answer.replace(/[^A-Z]/g,"").toUpperCase(), clue:x.clue}))); } else { setError('CSV parsed but no valid rows.'); }
           })
           .catch(e=>{ if (!cancelled){ setError((e && e.message) ? e.message : 'Failed to load crosswordclues.csv'); } })
           .finally(()=>{ if (!cancelled) setLoading(false); });
@@ -195,30 +175,8 @@
       large: { base: 31, maxLen: 35, maxClues: 20, minPlaced: 12 }
     };
 
-    // Map size level (0..14) or legacy 'small'|'medium'|'large' to preset values
-    function presetFor(levelOrOpt){
-      const LEGACY = { small: { base: 15, maxLen: 8, maxClues: 10, minPlaced: 6 },
-                       medium:{ base: 21, maxLen: 14, maxClues: 16, minPlaced: 10 },
-                       large: { base: 31, maxLen: 35, maxClues: 20, minPlaced: 12 } };
-      if (typeof levelOrOpt === 'string'){
-        return LEGACY[levelOrOpt] || LEGACY.medium;
-      }
-      let lvl = Number(levelOrOpt);
-      if (!isFinite(lvl)) lvl = 7;
-      lvl = Math.max(0, Math.min(14, Math.round(lvl)));
-      // Linear maps (inclusive): grid 13..35, maxLen 8..35, maxClues 10..20, minPlaced 6..12
-      const lerp = (a,b,t)=> a + (b-a)*t;
-      const t = lvl/14;
-      const base   = Math.round(lerp(13, 35, t));
-      const maxLen = Math.round(lerp( 8, 35, t));
-      const maxClues = Math.round(lerp(10, 20, t));
-      const minPlaced = Math.round(lerp(6, 12, t));
-      return { base, maxLen, maxClues, minPlaced };
-    }
-
-
-    function computeGridSize(words, presetIn){
-      const preset = presetIn || {base:21};
+    function computeGridSize(words, sizeOpt){
+      const preset = SIZE_PRESETS[sizeOpt] || SIZE_PRESETS.medium;
       const MAX=35, MIN=13; const longest=Math.max(3, ...words.map(w=>w.answer.length));
       let size=Math.max(preset.base, longest+2);
       size=Math.min(MAX, Math.max(MIN,size));
@@ -266,28 +224,32 @@
     }
         
 function isPlacementFilled(p, user){
-  if (!p || !Array.isArray(user) || user.length===0) return false;
-  const H = user.length;
-  const W = Array.isArray(user[0]) ? user[0].length : 0;
-  if (p.dir===DIRS.ACROSS){
-    const r = p.row;
-    if (r<0 || r>=H) return false;
-    for (let c=p.col; c<p.col+p.answer.length; c++){
-      if (c<0 || c>=W) return false;
-      if (!user[r] || !user[r][c]) return false;
+      // Bounds-safe check to avoid reading outside user grid during size changes
+      if (!p || !user || !Array.isArray(user) || user.length===0) return false;
+      const H = user.length;
+      const W = Array.isArray(user[0]) ? user[0].length : 0;
+      if (p.dir===DIRS.ACROSS){
+        const r = p.row;
+        if (r<0 || r>=H) return false;
+        const end = p.col + p.answer.length;
+        for (let c=p.col; c<end; c++){
+          if (c<0 || c>=W) return false;
+          if (!user[r] || !user[r][c]) return false;
+        }
+      } else {
+        const c = p.col;
+        if (c<0 || c>=W) return false;
+        const end = p.row + p.answer.length;
+        for (let r=p.row; r<end; r++){
+          if (r<0 || r>=H) return false;
+          if (!user[r] || !user[r][c]) return false;
+        }
+      }
+      return true;
     }
-  } else {
-    const c = p.col;
-    if (c<0 || c>=W) return false;
-    for (let r=p.row; r<p.row+p.answer.length; r++){
-      if (r<0 || r>=H) return false;
-      if (!user[r] || !user[r][c]) return false;
-    }
-  }
-  return true;
-}
 
-      function isStartAcrossCell(r,c,g){
+
+function isStartAcrossCell(r,c,g){
       const size=g.length;
       if (r<0||c<0||r>=size||c>=size) return false;
       if (g[r][c]===null) return false;
@@ -480,8 +442,8 @@ function isPlacementFilled(p, user){
       return { grid, placements, numbers, bounds:{minR,maxR,minC,maxC} };
     }
 
-    function pickDailyWords(bank, rng, presetIn){
-      const preset = presetIn || {base:21};
+    function pickDailyWords(bank, rng, sizeOpt){
+      const preset = SIZE_PRESETS[sizeOpt] || SIZE_PRESETS.medium;
       const pool=bank.slice().filter(x=>x.answer.length>=3 && x.answer.length<=preset.maxLen);
       pool.sort((a,b)=>Math.abs(a.answer.length-7)-Math.abs(b.answer.length-7));
       shuffleInPlace(pool,rng);
@@ -524,11 +486,10 @@ function isPlacementFilled(p, user){
     function App(){
       const { bank, loading, error } = useClueBank();
       const [sizeOpt, setSizeOpt] = useState('medium');
-      const [sizeLevel, setSizeLevel] = useState(7);
       const [seed, setSeed] = useState(()=>newRandomSeed());
       const rng = useMemo(()=>mulberry32(seed), [seed]);
-      const words = useMemo(()=> bank.length? pickDailyWords(bank, rng, presetFor(sizeLevel)): [], [bank, rng, sizeLevel]);
-      const size = useMemo(()=> computeGridSize(words.length?words:[{answer:'PLACEHOLDER', clue:''}], presetFor(sizeLevel)), [words, sizeLevel]);
+      const words = useMemo(()=> bank.length? pickDailyWords(bank, rng, sizeOpt): [], [bank, rng, sizeOpt]);
+      const size = useMemo(()=> computeGridSize(words.length?words:[{answer:'PLACEHOLDER', clue:''}], sizeOpt), [words, sizeOpt]);
 
       const emptySize = Math.max(13, Math.min(35, size||15));
       const emptyResult = useMemo(()=>({ 
@@ -542,7 +503,7 @@ function isPlacementFilled(p, user){
         try{
           if (!words.length) return emptyResult;
           let best=null;
-          const MAX_SALTS=200, MIN_WORDS=presetFor(sizeLevel).minPlaced;
+          const MAX_SALTS=200, MIN_WORDS=(SIZE_PRESETS[sizeOpt]||SIZE_PRESETS.medium).minPlaced;
           for (let salt=0; salt<MAX_SALTS; salt++){
             const g = generateCrosswordFromWords(words, seed+salt, size);
             const placed=g.placements.length;
@@ -814,15 +775,12 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
             <div className="overlay" onClick={(e)=>{ if (e.target===e.currentTarget) setShowOptions(false); }}>
               <div className="modal" role="dialog" aria-modal="true" aria-label="Options">
                 <h3>Options</h3>
-                <div className="row" style={{alignItems:'center', gap:'12px'}}>
-  <strong style={{minWidth:'48px'}}>Size:</strong>
-  <div style={{display:'flex', flexDirection:'column', flex:1}}>
-    <input type="range" min={0} max={14} step={1}
-           value={ sizeLevel }
-           onChange={(e)=>{ const v=Number(e.target.value); setSizeLevel(v); }}
-           className="slider" />
-  </div>
-</div>
+                <div className="row">
+                  <strong>Size:</strong>
+                  <label><input type="radio" name="size" checked={sizeOpt==='small'} onChange={()=>setSizeOpt('small')} /> small</label>
+                  <label><input type="radio" name="size" checked={sizeOpt==='medium'} onChange={()=>setSizeOpt('medium')} /> medium</label>
+                  <label><input type="radio" name="size" checked={sizeOpt==='large'} onChange={()=>setSizeOpt('large')} /> large</label>
+                </div>
                 
                 <div className="row" style={{flexDirection:'row', alignItems:'center'}}>
                   <label style={{fontWeight:700, minWidth:'56px', marginRight:'8px'}}>Seed</label>
@@ -908,7 +866,9 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                   <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New Puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
                 </div>
-                <div className="credit" style={{marginTop:'6px', }}>created by micah etter, md</div>
+<div className="credit" style={{marginTop:'6px'}}>created by micah etter, md</div>
+
+                
               </div>
 </div>
           )}

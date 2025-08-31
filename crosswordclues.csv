@@ -16,7 +16,7 @@ VERTIGO,Illusory sense of motion from vestibular dysfunction
 MIGRAINE,Recurrent headache often with photophobia; aura may occur
 EPILEPSY,Tendency for recurrent unprovoked seizures
 AURA,Transient focal symptoms preceding a seizure or migraine
-GERSTMANN,"Agraphia, acalculia, finger agnosia, and - disorientation syndrome"
+GERSTMANN,"Agraphia, acalculia, finger agnosia, and disorientation syndrome"
 BABINSKI,Upgoing plantar response indicating corticospinal tract dysfunction
 APHONIA,Loss of voice due to laryngeal or central causes
 APRAXIA,Inability to perform learned motor tasks despite intact strength
@@ -32,61 +32,59 @@ MIOSIS,Pupillary constriction
 MYDRIASIS,Pupillary dilation
 ANISOCORIA,Unequal pupil sizes
 HORNERSYNDROME,"Ptosis, miosis, anhidrosis from sympathetic pathway lesion"
-INTERNUCLEAROPHTHALMOPLEGIA,Impaired adduction with abducting nystagmus from MLF lesion
+INO,Impaired adduction with abducting nystagmus from MLF lesion
 ONEANDAHALFSYNDROME,Ipsilateral gaze palsy with contralateral INO
 PARINAUDSYNDROME,Dorsal midbrain syndrome with upgaze palsy and light-near dissociation
 MILLERFISHER,"Ataxia, areflexia, ophthalmoplegia variant of GBS"
 WALLENBERG,Lateral medullary infarct syndrome
-WEBERSYNDROME,Midbrain stroke with ipsilateral CN III palsy and contralateral weakness
+WEBER,Midbrain stroke with ipsilateral CN III palsy and contralateral weakness
 BENEDIKT,Midbrain tegmentum syndrome with oculomotor palsy and tremor
 BROWNSEQUARD,Hemisection of spinal cord causing ipsilateral weakness and contralateral pain loss
-ANTERIORCORDSYNDROME,Loss of motor and pain/temperature with preserved dorsal columns
-CENTRALCORDSYNDROME,Upper limb weakness greater than legs after cervical hyperextension
-POSTERIORCORDSYNDROME,Loss of vibration and proprioception with preserved pain and temperature
+ANTERIORCORD,Loss of motor and pain/temperature with preserved dorsal columns
+CENTRALCORD,Upper limb weakness greater than legs after cervical hyperextension
+POSTERIORCORD,Loss of vibration and proprioception with preserved pain and temperature
 CAUDAEQUINA,"Radicular pain, asymmetric weakness, saddle anesthesia, bladder involvement"
 CONUSMEDULLARIS,"Symmetric weakness, early sphincter dysfunction, perianal anesthesia"
-CORTICOSPINALTRACT,Descending motor pathway from cortex to spinal cord
-SPINOTHALAMICTRACT,Ascending pain and temperature pathway
+CORTICOSPINAL,Descending motor pathway from cortex to spinal cord
+SPINOTHALAMIC,Ascending pain and temperature pathway
 DORSALCOLUMNS,Ascending vibration and proprioception pathway
 SUBTHALAMICNUCLEUS,Lesion here causes hemiballismus
 BASALGANGLIA,Deep nuclei modulating movement initiation and inhibition
 GLOBUSPALLIDUSINTERNUS,Target of deep brain stimulation for dystonia
 SUBSTANTIANIGRA,Dopaminergic midbrain nucleus degenerated in Parkinson disease
-REDNUCLEUS,Midbrain structure associated with rubral tremor
-LOCUSCOERULEUS,Pontine norepinephrine nucleus linked to arousal
-CEREBELLARPEDUNCLES,Fiber bundles connecting cerebellum to brainstem
+RED,Midbrain nucleus associated with rubral tremor
+LOCUSCERULEUS,Pontine norepinephrine nucleus linked to arousal
+PEDUNCLES,Fiber bundles connecting cerebellum to brainstem
 VERMIS,Midline cerebellar structure; lesion causes truncal ataxia
 FLOCCULUS,Cerebellar region for vestibulo-ocular reflex calibration
-PURKINJECELL,Principal inhibitory neuron of cerebellar cortex
-OLFACTORYNERVE,Cranial nerve I for smell
-OPTICNERVE,Cranial nerve II for vision
-OCULOMOTORNERVE,Cranial nerve III for eye movements and pupil constriction
-TROCHLEARNERVE,Cranial nerve IV innervating superior oblique
-TRIGEMINALNERVE,Cranial nerve V for facial sensation and mastication
-ABDUCENSNERVE,Cranial nerve VI innervating lateral rectus
-FACIALNERVE,Cranial nerve VII for facial expression and taste anterior two-thirds
-VESTIBULOCOCHLEARNERVE,Cranial nerve VIII for hearing and balance
-GLOSSOPHARYNGEALNERVE,Cranial nerve IX for taste posterior third and pharynx
-VAGUSNERVE,Cranial nerve X for parasympathetic innervation and larynx
-ACCESSORYNERVE,Cranial nerve XI for sternocleidomastoid and trapezius
-HYPOGLOSSALNERVE,Cranial nerve XII for tongue movement
-PARKINSONDISEASE,"Bradykinesia, rigidity, rest tremor, postural instability"
-MULTIPLESYSTEMATROPHY,Atypical parkinsonism with early autonomic failure or cerebellar signs
-PROGRESSIVESUPRANUCLEARPALSY,Vertical gaze palsy with early falls and axial rigidity
-CORTICOBASALSYNDROME,Asymmetric apraxia and cortical sensory loss with parkinsonism
-ESSENTIALTREMOR,Action tremor improved by alcohol; familial
-HUNTINGTONDISEASE,Autosomal dominant chorea with CAG expansion
-WILSONDISEASE,Copper metabolism disorder with movement and hepatic involvement
-DOPARESPONSIVEDYSTONIA,Childhood-onset dystonia improved with levodopa
-TOURETTESYNDROME,Motor and vocal tics before age 18
+PURKINJE,Principal inhibitory neuron cell of cerebellar cortex
+OLFACTORY,Cranial nerve I for smell
+OPTIC,Cranial nerve II for vision
+OCULOMOTOR,Cranial nerve III for eye movements and pupil constriction
+TROCHLEAR,Cranial nerve IV innervating superior oblique
+TRIGEMINAL,Cranial nerve V for facial sensation and mastication
+ABDUCENS,Cranial nerve VI innervating lateral rectus
+FACIAL,Cranial nerve VII for facial expression and taste anterior two-thirds
+VESTIBULOCOCHLEAR,Cranial nerve VIII for hearing and balance
+GLOSSOPHARYNGEAL,Cranial nerve IX for taste posterior third and pharynx
+VAGUS,Cranial nerve X for parasympathetic innervation and larynx
+ACCESSORY,Cranial nerve XI for sternocleidomastoid and trapezius
+HYPOGLOSSAL,Cranial nerve XII for tongue movement
+PARKINSON,"Bradykinesia, rigidity, rest tremor, postural instability"
+MSA,Atypical parkinsonism with early autonomic failure or cerebellar signs
+PSP,Vertical gaze palsy with early falls and axial rigidity
+CORTICOBASAL,Asymmetric apraxia and cortical sensory loss with parkinsonism
+ESSENTIAL,Action tremor improved by alcohol; familial
+HUNTINGTON,Autosomal dominant chorea with CAG expansion
+WILSON,Copper metabolism disorder with movement and hepatic involvement
+DOPARESPONSIVE,Childhood-onset dystonia improved with levodopa
+TOURETTE,Motor and vocal tics before age 18
 AKATHISIA,Subjective inner restlessness with need to move
 BRADYKINESIA,Slowness of movement; cardinal feature of parkinsonism
 RIGIDITY,Velocity-independent resistance to passive movement
 CHOREA,"Random, flowing, dance-like movements"
-BALLISM,"Flinging, proximal movements; severe form of chorea"
 TIC,"Sudden, stereotyped, suppressible movement or sound"
-SPASTICITY,Velocity-dependent increase in muscle tone
-FLACCIDPARALYSIS,Hypotonia and areflexia from lower motor neuron lesion
+SPASTICITY,Velocity-dependent increased muscle tone
 FASCICULATION,Visible spontaneous muscle fiber twitch
 MYOTONIA,Delayed relaxation after contraction; grip _____
 NEUROMYOTONIA,Continuous muscle fiber activity; Isaacs syndrome
@@ -96,18 +94,18 @@ GUILLAINBARRE,Acute inflammatory demyelinating polyradiculoneuropathy
 ALS,Combined upper and lower motor neuron degeneration
 SMA,Genetic anterior horn cell disease; SMN1 deletions
 CARPALTUNNEL,Median neuropathy at the wrist causing nocturnal paresthesias
-ULNARNEUROPATHY,Entrapment at elbow causing numb 4th/5th digits
-RADIALNEUROPATHY,Wrist drop after compression in spiral groove
-PERONEALNEUROPATHY,Foot drop from fibular head entrapment
-TARSALTUNNEL,Posterior tibial nerve entrapment at the ankle
+ULNAR,Neuropathy entrapment at elbow causing numb 4th/5th digits
+RADIAL,Neuropathy wrist drop after compression in spiral groove
+PERONEAL,Neuropathy foot drop from fibular head entrapment
+TARSALTUNNEL,Posterior tibial nerve entrapment site at the ankle
 MERALGIAPARESTHETICA,Lateral femoral cutaneous nerve entrapment
-SMALLFIBERNEUROPATHY,Burning pain with preserved strength and reflexes
-DEMYELINATINGNEUROPATHY,Slowed conduction with prolonged distal latencies
-AXONALNEUROPATHY,Low amplitudes with relatively preserved velocities on NCS
+SMALLFIBER,Neuropathy with burning pain with preserved strength and reflexes
+DEMYELINATING,Neuropathy with slowed conduction with prolonged distal latencies
+AXONAL,Neuropathy with low amplitudes with relatively preserved velocities on NCS
 TRIGEMINALNEURALGIA,Lancinating facial pain triggered by light touch
 GLOSSOPHARYNGEALNEURALGIA,Throat/ear pain triggered by swallowing
 HEMIFACIALSPASM,Involuntary unilateral facial contractions from vascular loop
-BELLPALSY,Acute LMN facial palsy; idiopathic
+BELLSPALSY,Acute LMN facial palsy; idiopathic
 CLUSTERHEADACHE,Severe orbital pain with autonomic features; circadian
 PAROXYSMALHEMICRANIA,"Short unilateral headaches, indomethacin responsive"
 SUNCT,Short-lasting unilateral neuralgiform headache with conjunctival injection and tearing
@@ -118,28 +116,26 @@ MEDICATIONOVERUSEHEADACHE,Chronic daily headache due to frequent analgesic use
 CEREBRALVENOUSTHROMBOSIS,Headache with papilledema; MRV shows sinus occlusion
 SUBARACHNOIDHEMORRHAGE,Thunderclap headache from ruptured aneurysm
 INTRACEREBRALHEMORRHAGE,Lobar or deep bleed; hypertension common cause
-EPIDURALHEMATOMA,Lens-shaped collection after temporal bone fracture
-SUBDURALHEMATOMA,Crescent-shaped collection; bridging veins
-CEREBRALAMYLOIDANGIOPATHY,Lobar hemorrhage in elderly with microbleeds on MRI
-ARTERIOVENOUSMALFORMATION,Congenital shunt causing hemorrhage or seizures
-CAVERNOUSMALFORMATION,Mulberry lesion with hemosiderin rim on MRI
-ISCHEMICSTROKE,Focal deficit from arterial occlusion
-LACUNARINFARCT,Small deep infarct from lipohyalinosis
-WATERSHEDINFARCT,Borderzone ischemia between arterial territories
-S,Noncontrast CT clue of acute thrombus in M1
-DENSEBASILARSIGN,Hyperattenuated basilar artery on CT indicating thrombosis
+EPIDURAL,Lens-shaped hematoma after temporal bone fracture
+SUBDURAL,Crescent-shaped hematoma; bridging veins
+CEREBRALAMYLOID,Lobar angiopathy in elderly with microbleeds on MRI
+ARTERIOVENOUSMALFORMATION,Congenital vascular shunt causing hemorrhage or seizures
+CAVERNOUSMALFORMATION,Popcorn lesion with hemosiderin rim on MRI
+ISCHEMICSTROKE,Focal deficit from cerebral arterial occlusion
+LACUNAR,Small deep infarct from lipohyalinosis
+WATERSHED,Borderzone ischemia between arterial territories
 ASPECTS,Ten-point CT score for early ischemia in MCA territory
 NIHSS,Standardized scale to quantify stroke severity
 TENECTEPLASE,Fibrin-specific thrombolytic used for stroke
 THROMBECTOMY,Endovascular clot retrieval for large vessel occlusion
-OSMOTICDEMYELINATION,Central pontine/extrapontine myelinolysis after rapid sodium correction
-WERNICKEENCEPHALOPATHY,"Thiamine deficiency with confusion, ataxia, ophthalmoplegia"
+OSMOTICDE,Central pontine/extrapontine myelinolysis after rapid sodium correction
+WERNICKE,"Thiamine deficiency encephalopathy with confusion, ataxia, ophthalmoplegia"
 KORSAKOFF,Amnestic syndrome with confabulation after thiamine deficiency
 MARCHIAFAVABIGNAMI,Corpus callosum demyelination in alcohol misuse
-HEPATICENCEPHALOPATHY,Cognitive slowing from hyperammonemia
-HYPOXICISCHEMICINJURY,Global anoxic brain injury after cardiac arrest
-POSTERIORREVERSIBLEENCEPHALOPATHY,"Headache, seizures, visual loss with vasogenic edema"
-REVERSIBLECEREBRALVASOCONSTRICTION,Recurrent thunderclap headaches with segmental narrowing
+HEPATICENC,Cognitive slowing encephalopathy from hyperammonemia
+HYPOXICISCHEMIC,Global anoxic brain injury after cardiac arrest
+PRES,"Headache, seizures, visual loss with vasogenic edema; abbreviation"
+RCVS,Recurrent thunderclap headaches with segmental narrowing; abbreviation
 MELAS,Mitochondrial encephalomyopathy with lactic acidosis and stroke-like episodes
 MERRF,Myoclonic epilepsy with ragged red fibers
 LHON,Hereditary optic neuropathy causing subacute visual loss
@@ -308,7 +304,7 @@ ALEMTUZUMAB,Anti-CD52 monoclonal; autoimmune risks
 ECULIZUMAB,Complement inhibitor approved for AQP4+ NMOSD
 INEBILIZUMAB,Anti-CD19 monoclonal for NMOSD
 SATRALIZUMAB,IL-6 receptor blocker for NMOSD
-IVIG,Intravenous immunoglobulin used in CIDP and MG exacerbations
+IVIG,Intravenous treatment used in CIDP and MG exacerbations
 PLASMAPHERESIS,Apheresis removing pathogenic antibodies
 GLIOBLASTOMA,IDH-wildtype WHO grade 4 astrocytic tumor
 ASTROCYTOMA,Glial neoplasm from astrocytes; graded by WHO criteria
@@ -548,20 +544,17 @@ NICARDIPINE,IV calcium-channel blocker for acute BP control in ICH/SAH
 CLEVIDIPINE,Ultra-short-acting calcium-channel blocker for BP control
 ICHSCORE,Grading system predicting mortality in intracerebral hemorrhage
 TICISCORE,Reperfusion grading after thrombectomy
-MTICITWOB,Successful reperfusion grade in endovascular therapy
-ABCOVERTWOMETHOD,Ellipsoid formula to estimate hematoma volume on CT
 ROPESCORE,Risk of Paradoxical Embolism score in PFO-related stroke
 ESUS,Embolic stroke of undetermined source
 PATENTFORAMENOVALE,Interatrial communication implicated in cryptogenic stroke
-GASSERIANGANGLION,Trigeminal ganglion in Meckel cave
-GENICULATEGANGLION,Facial nerve sensory ganglion in facial canal
-CILIARYGANGLION,Parasympathetic ganglion for pupil constriction
-OTICGANGLION,Parasympathetic ganglion to parotid gland via CN IX
-PTERYGOPALATINEGANGLION,Parasympathetic ganglion to lacrimal and nasal glands
-NUCLEUSAMBIGUUS,Motor nucleus for CN IX and X controlling larynx/pharynx
-NUCLEUSSOLITARIUS,Visceral sensory nucleus for taste and baroreception
-EDINGERWESTPHALNUCLEUS,Parasympathetic preganglionic nucleus of CN III
-DORSALMOTORNUCLEUSOFVAGUS,Parasympathetic output to thoracoabdominal viscera
+GASSERIAN,Trigeminal ganglion in Meckel cave
+GENICULATE,Facial nerve sensory ganglion in facial canal
+CILIARY,Parasympathetic ganglion for pupil constriction
+OTIC,Parasympathetic ganglion to parotid gland via CN IX
+PTERYGOPALATINE,Parasympathetic ganglion to lacrimal and nasal glands
+AMBIGUUS,Motor nucleus for CN IX and X controlling larynx/pharynx
+SOLITARIUS,Visceral sensory nucleus for taste and baroreception
+EDINGERWESTPHAL,Parasympathetic preganglionic nucleus of CN III
 FACIALCOLLICULUS,Pons floor bump from CN VII fibers looping around CN VI nucleus
 AMAN,Acute motor axonal neuropathy variant of Guillain-BarrÃ©
 AMSAN,Acute motor-sensory axonal neuropathy variant of GBS
@@ -573,11 +566,10 @@ APNEATEST,Assessment of brainstem function by CO2 rise without respiratory effor
 OCULOCEPHALICREFLEX,Doll's eyes test for brainstem integrity
 COUGHREFLEX,Tracheal stimulation response absent in brain death
 CORNEALREFLEX,Blink response to corneal touch
-MPTPTOXICITY,Causes parkinsonism via dopaminergic neuron injury
-MANGANESETOXICITY,Parkinsonism with T1 hyperintensity in globus pallidus
-NITROUSOXIDEMYELONEUROPATHY,Subacute combined degeneration mimic from B12 inactivation
-LEADNEUROPATHY,Motor-predominant neuropathy with wrist/finger drop
-ARSENICNEUROPATHY,Painful sensorimotor axonopathy after exposure
+MANGANESETOXICITY,Parkinsonism with T1 hyperintensity in globus pallidus; heavy metal
+NITROUSOXIDEMYELOPATHY,Subacute combined degeneration mimic from B12 inactivation
+LEAD,Motor-predominant heavy metal neuropathy with wrist/finger drop
+ARSENIC,Painful sensorimotor heavy metal axonopathy after exposure
 ORGANOPHOSPHATEPOISONING,"Cholinergic crisis with miosis, bronchorrhea, weakness"
 CARBONMONOXIDEPOISONING,Delayed neurologic sequelae with globus pallidus lesions
 TIMEDUPANDGO,"Functional mobility test measuring time to stand, walk, and sit"
@@ -758,11 +750,11 @@ HEMIPLEGICMIGRAINE,Migraine with transient unilateral weakness
 SPORADICHEMIPLEGICMIGRAINE,Hemiplegic migraine without known familial mutation
 FAMILIALHEMIPLEGICMIGRAINE,CACNA1A-linked migraine with motor aura
 ALIENLIMBPHENOMENON,Loss of sense of ownership causing unwanted limb movements
-SUBFALCINEHERNIATION,Cingulate gyrus under falx cerebri
+SUBFALCINE,Cingulate gyrus herniation under falx cerebri
 RASMUSSENENCEPHALITIS,Chronic focal epilepsy with inflammation
-PRIONDISEASE,Transmissible spongiform encephalopathy
+PRION,Transmissible spongiform encephalopathy
 FLOWVOID,Signal loss where blood moves fast on T2
-HYPERMOTORSEIZURE,Thrashing or bicycling like movements
+HYPERMOTORSEIZURE,Epileptic thrashing or bicycling like movements
 MENSTRUALMIGRAINE,Headache attacks linked to menstrual cycle
 DULOXETINE,SNRI for neuropathic pain
 KRABBELEUKODYSTROPHY,GALC deficiency leukodystrophy

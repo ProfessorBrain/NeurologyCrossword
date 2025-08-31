@@ -28,7 +28,7 @@
     .btn:hover { background:#f5f5f5; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
     .btn.reveal { background:#f5f3ff; border-color:#7c3aed; }
     .btn.reveal:hover { background:#ede9fe; }
-    .credit { display:block; width:100%; padding-top: 8px; font-size: 12px; opacity: .7;   text-align:center; }
+    .credit { padding-top: 8px; font-size: 12px; opacity: .7; text-align: right; }
     .hint { font-size: 12px; color:#4c1d95; padding-left:8px; }
     .error { color:#b91c1c; font-weight:600; }
     #errOverlay { position: fixed; inset: 0; background: rgba(255,255,255,.96); color:#111; padding: 16px; z-index: 99999; display:none; }
@@ -40,7 +40,7 @@
     .clue-text { flex: 1; }
     /* Modal */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index: 10000; }
-    .modal { font-family: 'Courier New', Courier, monospace; background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+    .modal { background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
     .modal h3 { margin: 0 0 8px 0; font-size:18px; }
     .modal .row { display:flex; gap:10px; align-items:center; padding:8px 0; }
     .modal .slider{ width:100%; }
@@ -77,7 +77,6 @@
     }
     
     .btn.reveal.active { box-shadow: 0 0 0 2px #7c3aed inset; }
-  .btn, .btnrow button, button { font-family: 'Courier New', Courier, monospace; }
 </style>
 </head>
 <body>
@@ -151,25 +150,7 @@
         let cancelled=false;
         fetch('crosswordclues.csv')
           .then(r=>{ if (!r.ok) throw new Error('CSV not found'); return r.text(); })
-          .then(txt=>{
-            if (cancelled) return;
-            const lines = txt.split(/\r\n|\n|\r/).filter(Boolean);
-            const rows = [];
-            for (let raw of lines){
-              let line = raw.trim();
-              if (!line) continue;
-              const idx = line.indexOf(',');
-              if (idx === -1) continue;
-              let ans = line.slice(0, idx).trim();
-              let clue = line.slice(idx+1).trim();
-              if (ans.startsWith('"') && ans.endsWith('"')) ans = ans.slice(1,-1);
-              if (clue.startsWith('"') && clue.endsWith('"')) clue = clue.slice(1,-1);
-              const answer = ans.replace(/[^A-Za-z]/g,'').toUpperCase();
-              if (!answer) continue;
-              rows.push({answer, clue});
-            }
-            if (rows.length === 0) throw new Error('CSV parsed but no valid rows.');
-            setBank(rows);
+          .then(txt=>{ if (cancelled) return; const parsed=parseCSVTwoCols(txt); if (parsed.length){ setBank(parsed.map(x=>({answer:x.answer.replace(/[^A-Z]/g,"").toUpperCase(), clue:x.clue}))); } else { setError('CSV parsed but no valid rows.'); }
           })
           .catch(e=>{ if (!cancelled){ setError((e && e.message) ? e.message : 'Failed to load crosswordclues.csv'); } })
           .finally(()=>{ if (!cancelled) setLoading(false); });
@@ -264,29 +245,16 @@
         return nn;
       });
     }
-        
-function isPlacementFilled(p, user){
-  if (!p || !Array.isArray(user) || user.length===0) return false;
-  const H = user.length;
-  const W = Array.isArray(user[0]) ? user[0].length : 0;
-  if (p.dir===DIRS.ACROSS){
-    const r = p.row;
-    if (r<0 || r>=H) return false;
-    for (let c=p.col; c<p.col+p.answer.length; c++){
-      if (c<0 || c>=W) return false;
-      if (!user[r] || !user[r][c]) return false;
+        function isPlacementFilled(p, user){
+      if (!p) return false;
+      if (p.dir===DIRS.ACROSS){
+        const r=p.row; for (let c=p.col;c<p.col+p.answer.length;c++){ if (!user[r][c]) return false; }
+      } else {
+        const c=p.col; for (let r=p.row;r<p.row+p.answer.length;r++){ if (!user[r][c]) return false; }
+      }
+      return true;
     }
-  } else {
-    const c = p.col;
-    if (c<0 || c>=W) return false;
-    for (let r=p.row; r<p.row+p.answer.length; r++){
-      if (r<0 || r>=H) return false;
-      if (!user[r] || !user[r][c]) return false;
-    }
-  }
-  return true;
-}
-
+    
       function isStartAcrossCell(r,c,g){
       const size=g.length;
       if (r<0||c<0||r>=size||c>=size) return false;
@@ -821,6 +789,9 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
            value={ sizeLevel }
            onChange={(e)=>{ const v=Number(e.target.value); setSizeLevel(v); }}
            className="slider" />
+    <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', marginTop:'4px'}}>
+      <span>small</span><span>medium</span><span>large</span>
+    </div>
   </div>
 </div>
                 
@@ -905,10 +876,10 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
 
                 <div className="btnrow">
                   <button id="revealBtn" className={'btn reveal' + (revealMode ? ' active' : '')} onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
-                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New Puzzle</button>
+                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
                 </div>
-                <div className="credit" style={{marginTop:'6px', }}>created by micah etter, md</div>
+                <div className="credit" style={{marginTop:'6px', textAlign:'left'}}>created by micah etter, md</div>
               </div>
 </div>
           )}

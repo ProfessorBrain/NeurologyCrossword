@@ -28,7 +28,7 @@
     .btn:hover { background:#f5f5f5; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
     .btn.reveal { background:#f5f3ff; border-color:#7c3aed; }
     .btn.reveal:hover { background:#ede9fe; }
-    .credit { display:block; width:100%; padding-top: 8px; font-size: 12px; opacity: .7;   text-align:center; }
+    .credit { padding-top: 8px; font-size: 12px; opacity: .7; text-align: right; }
     .hint { font-size: 12px; color:#4c1d95; padding-left:8px; }
     .error { color:#b91c1c; font-weight:600; }
     #errOverlay { position: fixed; inset: 0; background: rgba(255,255,255,.96); color:#111; padding: 16px; z-index: 99999; display:none; }
@@ -40,7 +40,7 @@
     .clue-text { flex: 1; }
     /* Modal */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index: 10000; }
-    .modal { font-family: 'Courier New', Courier, monospace; background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+    .modal { background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
     .modal h3 { margin: 0 0 8px 0; font-size:18px; }
     .modal .row { display:flex; gap:10px; align-items:center; padding:8px 0; }
     .modal .slider{ width:100%; }
@@ -77,7 +77,6 @@
     }
     
     .btn.reveal.active { box-shadow: 0 0 0 2px #7c3aed inset; }
-  .btn, .btnrow button, button { font-family: 'Courier New', Courier, monospace; }
 </style>
 </head>
 <body>
@@ -821,6 +820,9 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
            value={ sizeLevel }
            onChange={(e)=>{ const v=Number(e.target.value); setSizeLevel(v); }}
            className="slider" />
+    <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', marginTop:'4px'}}>
+      <span>small</span><span>medium</span><span>large</span>
+    </div>
   </div>
 </div>
                 
@@ -905,10 +907,10 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
 
                 <div className="btnrow">
                   <button id="revealBtn" className={'btn reveal' + (revealMode ? ' active' : '')} onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
-                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New Puzzle</button>
+                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
                 </div>
-                <div className="credit" style={{marginTop:'6px', }}>created by micah etter, md</div>
+                <div className="credit" style={{marginTop:'6px', textAlign:'left'}}>created by micah etter, md</div>
               </div>
 </div>
           )}

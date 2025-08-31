@@ -77,7 +77,6 @@
     }
     
     .btn.reveal.active { box-shadow: 0 0 0 2px #7c3aed inset; }
-  .btn, .btnrow button, button { font-family: 'Courier New', Courier, monospace; }
 </style>
 </head>
 <body>
@@ -905,7 +904,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
 
                 <div className="btnrow">
                   <button id="revealBtn" className={'btn reveal' + (revealMode ? ' active' : '')} onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
-                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New Puzzle</button>
+                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>New puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
                 </div>
                 <div className="credit" style={{marginTop:'6px', }}>created by micah etter, md</div>
