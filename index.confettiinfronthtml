@@ -1407,7 +1407,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                 
           
 {showCongrats && (
-            <div className="overlay" style={{zIndex:12000}}>
+            <div className="overlay" style={{zIndex:3000}}>
               <div className="modal" role="dialog" aria-modal="true" style={{textAlign:"center", width:"min(90vw, 520px)"}}>
                 <h3>Congratulations!</h3>
                 <p>You solved the puzzle. 🎉</p>

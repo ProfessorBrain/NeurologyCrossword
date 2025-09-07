@@ -613,7 +613,7 @@ function isStartAcrossCell(r,c,g){
     function fireConfetti(count){
       count = (typeof count==='number' && isFinite(count)) ? count : 8;
       const container=document.createElement('div');
-      container.style.position='fixed'; container.style.inset='0'; container.style.pointerEvents='none'; container.style.zIndex='1000';
+      container.style.position='fixed'; container.style.inset='0'; container.style.pointerEvents='none';
       document.body.appendChild(container);
       const EMOJIS=['🎉','✨','⭐'];
       const N=Math.max(1, Math.min(40, Math.floor(count)));
@@ -1407,7 +1407,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                 
           
 {showCongrats && (
-            <div className="overlay" style={{zIndex:12000}}>
+            <div className="overlay" style={{zIndex:9998}}>
               <div className="modal" role="dialog" aria-modal="true" style={{textAlign:"center", width:"min(90vw, 520px)"}}>
                 <h3>Congratulations!</h3>
                 <p>You solved the puzzle. 🎉</p>
