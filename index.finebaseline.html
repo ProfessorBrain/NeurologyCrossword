@@ -641,7 +641,7 @@ function isStartAcrossCell(r,c,g){
       const [sizeLevel, setSizeLevel] = useState(()=>{
         const q = readQuery();
         if (q.level !== null) return q.level;
-        return 5;
+        return 7;
       });
       const [seed, setSeed] = useState(()=>{
         const q = readQuery();
@@ -1408,25 +1408,35 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
           
 {showCongrats && (
             <div className="overlay" style={{zIndex:9998}}>
-              <div className="modal" role="dialog" aria-modal="true" style={{textAlign:"center", width:"min(90vw, 520px)"}}>
+              <div className="modal" role="dialog" aria-modal="true">
                 <h3>Congratulations!</h3>
                 <p>You solved the puzzle. 🎉</p>
-
-                {missedCount > 0 && (
-                  <div className="card" style={{marginTop:8}}>
-                    <h4 style={{margin:'0 0 6px 0'}}>You needed help on</h4>
-                    <div className="missedScroll" style={{fontSize:14, lineHeight:1.4, maxHeight:"40vh", overflowY:"auto", paddingRight:"6px", textAlign:"center"}}>
-                      {getMissedPlacements().map((m, idx) => (
-                      <div key={idx} style={{margin:'10px 0 16px 0', textAlign:'center'}}>
-                        <div style={{fontSize:14, opacity:.85}}>{m.clue}</div>
-                        <div style={{fontSize:16, fontWeight:700, letterSpacing:'0.5px', marginTop:2}}>{m.answer}</div>
-                      </div>
-                      ))}
-                    </div>
-                  </div>
+                <div className="actions
+                {timerOn && (
+                  <p style={{marginTop:6}}><strong>Your time:</strong> {formatMs(elapsedMs + (timerStart ? (nowTick - timerStart) : 0))}</p>
                 )}
-
-                <div className="actions" style={{justifyContent:'flex-end'}}>
+" style={{justifyContent:'space-between'}}>
+                  {missedCount > 0 ? (
+                    <button
+                      className="btn"
+                      onClick={()=>{
+                        const missed = getMissedPlacements();
+                        if (missed && missed.length){
+                          setPracticeWords(missed);
+                          setShowCongrats(false);
+                          setRevealMode(false);
+                          setActive(null);
+                          setDir(DIRS.ACROSS);
+                          setSeed(newRandomSeed());
+                        } else {
+                          setShowCongrats(false);
+                        }
+                      }}
+                      title="Build a mini‑puzzle from the ones you revealed or typed incorrectly"
+                    >
+                      Practice the ones you missed ({missedCount})
+                    </button>
+                  ) : <span />}
                   <button className="btn" onClick={()=>setShowCongrats(false)}>Close</button>
                 </div>
               </div>
