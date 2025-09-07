@@ -664,28 +664,7 @@ const rng = useMemo(()=>mulberry32(seed), [seed]);
         bounds: {minR:0, maxR:emptySize-1, minC:0, maxC:emptySize-1}
       }), [emptySize]);
 
-      
-      // Symmetry helper: 180° rotational symmetry mismatches (block vs letter)
-      function symmetryMismatches(g){
-        try{
-          const grid = g && g.grid ? g.grid : g;
-          if (!grid || !grid.length) return 0;
-          const n = grid.length, m = grid[0].length;
-          let mismatches = 0;
-          for (let r=0; r<n; r++){
-            for (let c=0; c<m; c++){
-              const mr = n-1-r, mc = m-1-c;
-              if (r>mr || (r===mr && c>mc)) continue; // count pairs once
-              const a = grid[r][c]!==null;
-              const b = grid[mr][mc]!==null;
-              if (a!==b) mismatches++;
-            }
-          }
-          return mismatches;
-        }catch(_){ return 0; }
-      }
-
-const result = useMemo(()=>{
+      const result = useMemo(()=>{
         try{
           if (!words.length) return emptyResult;
           let best=null;
@@ -703,35 +682,9 @@ const result = useMemo(()=>{
               }
             }
             let crosses=0; for (let r=0;r<H;r++) for (let c=0;c<W;c++) if (counts[r][c]>1) crosses++;
-            const sym = symmetryMismatches(g);
-            const score=placed*10 + crosses - sym*8;
+            const score=placed*10+crosses;
             if (!best || score>best.score) best={...g, score};
             if (placed>=MIN_WORDS) return g;
-          }
-          // Fallback: if score low, retry at a slightly smaller base and prefer better layout
-          const threshold = presetFor(sizeLevel).minPlaced*10;
-          if (best && best.score < threshold && size>13){
-            const smaller = Math.max(13, size-2);
-            let bestSmall=null;
-            for (let s2=0; s2<120; s2++){
-              const g2 = generateCrosswordFromWords(words, seed+s2, smaller);
-              const placed2=g2.placements.length;
-              const H2=g2.grid.length, W2=g2.grid[0].length;
-              const counts2=Array.from({length:H2},()=>Array(W2).fill(0));
-              for (let pIndex=0;pIndex<g2.placements.length;pIndex++){
-                const p2=g2.placements[pIndex];
-                for (let i2=0;i2<p2.answer.length;i2++){
-                  const rr=p2.dir===DIRS.ACROSS?p2.row:p2.row+i2, cc=p2.dir===DIRS.ACROSS?p2.col+i2:p2.col;
-                  if (rr>=0 && rr<H2 && cc>=0 && cc<W2) counts2[rr][cc]+=1;
-                }
-              }
-              let crosses2=0; for (let r=0;r<H2;r++) for (let c=0;c<W2;c++) if (counts2[r][c]>1) crosses2++;
-              const sym2 = symmetryMismatches(g2);
-              const score2 = placed2*10 + crosses2 - sym2*8;
-              if (!bestSmall || score2>bestSmall.score) bestSmall={...g2, score:score2};
-              if (placed2>=MIN_WORDS && sym2===0) { bestSmall={...g2, score:score2}; break; }
-            }
-            if (bestSmall && bestSmall.score>best.score) return bestSmall;
           }
           return best || generateCrosswordFromWords(words, seed, size);
         }catch(e){
@@ -739,7 +692,6 @@ const result = useMemo(()=>{
           return emptyResult;
         }
       }, [words, seed, size, emptyResult]);
-
 
       const grid = result.grid, placements = result.placements, numbers = result.numbers, bounds = result.bounds;
 

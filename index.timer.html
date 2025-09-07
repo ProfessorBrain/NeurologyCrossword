@@ -664,28 +664,7 @@ const rng = useMemo(()=>mulberry32(seed), [seed]);
         bounds: {minR:0, maxR:emptySize-1, minC:0, maxC:emptySize-1}
       }), [emptySize]);
 
-      
-      // Symmetry helper: 180° rotational symmetry mismatches (block vs letter)
-      function symmetryMismatches(g){
-        try{
-          const grid = g && g.grid ? g.grid : g;
-          if (!grid || !grid.length) return 0;
-          const n = grid.length, m = grid[0].length;
-          let mismatches = 0;
-          for (let r=0; r<n; r++){
-            for (let c=0; c<m; c++){
-              const mr = n-1-r, mc = m-1-c;
-              if (r>mr || (r===mr && c>mc)) continue; // count pairs once
-              const a = grid[r][c]!==null;
-              const b = grid[mr][mc]!==null;
-              if (a!==b) mismatches++;
-            }
-          }
-          return mismatches;
-        }catch(_){ return 0; }
-      }
-
-const result = useMemo(()=>{
+      const result = useMemo(()=>{
         try{
           if (!words.length) return emptyResult;
           let best=null;
@@ -703,35 +682,9 @@ const result = useMemo(()=>{
               }
             }
             let crosses=0; for (let r=0;r<H;r++) for (let c=0;c<W;c++) if (counts[r][c]>1) crosses++;
-            const sym = symmetryMismatches(g);
-            const score=placed*10 + crosses - sym*8;
+            const score=placed*10+crosses;
             if (!best || score>best.score) best={...g, score};
             if (placed>=MIN_WORDS) return g;
-          }
-          // Fallback: if score low, retry at a slightly smaller base and prefer better layout
-          const threshold = presetFor(sizeLevel).minPlaced*10;
-          if (best && best.score < threshold && size>13){
-            const smaller = Math.max(13, size-2);
-            let bestSmall=null;
-            for (let s2=0; s2<120; s2++){
-              const g2 = generateCrosswordFromWords(words, seed+s2, smaller);
-              const placed2=g2.placements.length;
-              const H2=g2.grid.length, W2=g2.grid[0].length;
-              const counts2=Array.from({length:H2},()=>Array(W2).fill(0));
-              for (let pIndex=0;pIndex<g2.placements.length;pIndex++){
-                const p2=g2.placements[pIndex];
-                for (let i2=0;i2<p2.answer.length;i2++){
-                  const rr=p2.dir===DIRS.ACROSS?p2.row:p2.row+i2, cc=p2.dir===DIRS.ACROSS?p2.col+i2:p2.col;
-                  if (rr>=0 && rr<H2 && cc>=0 && cc<W2) counts2[rr][cc]+=1;
-                }
-              }
-              let crosses2=0; for (let r=0;r<H2;r++) for (let c=0;c<W2;c++) if (counts2[r][c]>1) crosses2++;
-              const sym2 = symmetryMismatches(g2);
-              const score2 = placed2*10 + crosses2 - sym2*8;
-              if (!bestSmall || score2>bestSmall.score) bestSmall={...g2, score:score2};
-              if (placed2>=MIN_WORDS && sym2===0) { bestSmall={...g2, score:score2}; break; }
-            }
-            if (bestSmall && bestSmall.score>best.score) return bestSmall;
           }
           return best || generateCrosswordFromWords(words, seed, size);
         }catch(e){
@@ -739,7 +692,6 @@ const result = useMemo(()=>{
           return emptyResult;
         }
       }, [words, seed, size, emptyResult]);
-
 
       const grid = result.grid, placements = result.placements, numbers = result.numbers, bounds = result.bounds;
 
@@ -759,7 +711,6 @@ const result = useMemo(()=>{
 
 
             const hiddenInputRef = useRef(null);
-      const lastTapRef = useRef({ t:0, r:-1, c:-1 });
       const [isMobile, setIsMobile] = useState(false);
       useEffect(()=>{ try{ setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent||'')); }catch(_){ } },[]);
 useEffect(()=>{
@@ -787,19 +738,11 @@ useEffect(()=>{
           if (raw){
             const obj = JSON.parse(raw);
             if (obj && typeof obj==='object' && obj.seed){
-              const q = readQuery();
-              if (q.seed === null && q.level === null) {
-                if (obj.seed) setSeed(obj.seed);
-                if (typeof obj.sizeLevel==='number') setSizeLevel(obj.sizeLevel);
-                setPendingResume(obj);
-                setShowCongrats(false);
-              } else {
-                setResumeData(obj);
-              }
+              setResumeData(obj);
             }
           }
         }catch(_){}
-      },[]);;
+      },[]);
 
       const wrapRef=useRef(null);
       const [cellPx,setCellPx]=useState(24);
@@ -973,22 +916,7 @@ useEffect(()=>{
         }catch(_){}
       }, [userGrid, pendingResume]);
 
-      
-      // Autosave current puzzle state
-      useEffect(()=>{
-        try{
-          const payload = {
-            seed,
-            sizeLevel,
-            userGrid,
-            locked: Array.from(locked || []),
-            revealed: Array.from(revealed || []),
-            ts: Date.now()
-          };
-          localStorage.setItem('neuroxcw.save.v1', JSON.stringify(payload));
-        }catch(_){}
-      }, [seed, sizeLevel, userGrid, locked, revealed]);
-const errorSet=useMemo(()=>{
+      const errorSet=useMemo(()=>{
         const errs=new Set();
         for (let r=bounds.minR;r<=bounds.maxR;r++){
           for (let c=bounds.minC;c<=bounds.maxC;c++){
@@ -1062,104 +990,6 @@ const errorSet=useMemo(()=>{
         if (!timerOn){ /* when off, keep elapsed frozen until turned on again */ }
       }, [timerOn, timerStart]);
 
-      
-      // Printable page generator with answer key toggle
-      
-
-function openPrintPreview(){
-        try{
-          if (!grid || !Array.isArray(grid) || !grid.length){ alert('Puzzle not ready to print.'); return; }
-          var n = grid.length;
-          var cell = Math.max(12, Math.min(24, Math.floor(600 / n)));
-          // letters from solution grid
-          var lettersJS = JSON.stringify(grid.map(function(row){ return row.map(function(ch){ return ch || ''; }); }));
-          // numbering grid (fallback to compute if not present)
-          var numbersGrid = (typeof numbers !== 'undefined' && numbers && numbers.length===n) ? numbers
-                             : (function(){
-                                  var nums = Array.from({length:n}, ()=>Array(n).fill(null));
-                                  var isLetter = function(r,c){ return r>=0&&c>=0&&r<n&&c<n&&grid[r][c]!==null; };
-                                  var cur=1;
-                                  for (var r=0;r<n;r++){ for (var c=0;c<n;c++){ if (!isLetter(r,c)) continue;
-                                    var startsAcross = !isLetter(r,c-1)&&isLetter(r,c)&&isLetter(r,c+1);
-                                    var startsDown   = !isLetter(r-1,c)&&isLetter(r,c)&&isLetter(r+1,c);
-                                    if (startsAcross||startsDown) nums[r][c]=cur++;
-                                  }}
-                                  return nums;
-                                })();
-          var numbersJS = JSON.stringify(numbersGrid.map(function(row){ return row.map(function(x){ return x||0; }); }));
-          // blocks from grid nulls
-          var blocksJS  = JSON.stringify(grid.map(function(row){ return row.map(function(ch){ return ch===null ? 1 : 0; }); }));
-          // across/down lists
-          var acrossJS  = JSON.stringify((typeof across!=='undefined'&&across)? across : []);
-          var downJS    = JSON.stringify((typeof down!=='undefined'&&down)? down : []);
-          var title = 'Neurology Crossword Puzzler';
-
-          var w = window.open('', '_blank');
-          if (!w) { alert('Popup blocked. Please allow popups to print.'); return; }
-          w.document.open();
-
-          var html = '';
-          html += '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><title>'+title+' — Printable</title>';
-          html += '<style>';
-          html += ':root { --cell:'+cell+'px; }';
-          html += '@page { size: letter portrait; margin: 14mm; }';
-          html += '*{ box-sizing:border-box; }';
-          html += 'body{ font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial; color:#000; background:#fff; }';
-          html += 'h1{ font-family: Courier, monospace; font-size: 20px; margin:0 0 8px 0; }';
-          html += '.wrap{ display:grid; grid-template-columns: auto 1fr; gap:16px; align-items:start; }';
-          html += '.grid{ display:grid; grid-template-columns: repeat('+n+', var(--cell)); grid-auto-rows: var(--cell); border:2px solid #000; border-right:none; border-bottom:none; }';
-          html += '.cell{ width:var(--cell); height:var(--cell); border-right:2px solid #000; border-bottom:2px solid #000; position:relative; display:flex; align-items:center; justify-content:center; }';
-          html += '.blk{ background:#000; }';
-          html += '.num{ position:absolute; top:1px; left:2px; font-size:9px; font-weight:600; }';
-          html += '.ltr{ font-weight:700; font-size: calc(var(--cell)*0.55); line-height:1; }';
-          html += '.clues{ display:grid; grid-template-rows:auto auto; gap:10px; }';
-          html += '.card{ border:1px solid #111; border-radius:8px; padding:8px 10px; }';
-          html += '.card h2{ font-size:14px; margin:0 0 6px 0; }';
-          html += '.clue{ padding:2px 0; }';
-          html += '.controls{ display:flex; gap:10px; align-items:center; margin:6px 0 10px 0; }';
-          html += '.note{ font-size:12px; opacity:.7; }';
-          html += '.answers-off .ltr{ visibility:hidden; }';
-          html += '.answers-off .ltr::selection{ background:transparent; }';
-          html += '@media print { .controls{ display:none; } }';
-          html += '</style></head><body class="answers-off">';
-          html += '<h1>'+title+'</h1>';
-          html += '<div class="controls">';
-          html += '<label><input id="ans" type="checkbox"/> Show answer key</label>';
-          html += '<button onclick="window.print()">Print…</button>';
-          html += '<span class="note">Toggle answers on/off before printing.</span>';
-          html += '</div>';
-          html += '<div class="wrap">';
-          html += '<div id="grid" class="grid"></div>';
-          html += '<div class="clues">';
-          html += '<div class="card"><h2>Across</h2><div id="ac"></div></div>';
-          html += '<div class="card"><h2>Down</h2><div id="dn"></div></div>';
-          html += '</div></div>';
-          html += '<script>';
-          html += 'var letters = '+lettersJS+';';
-          html += 'var numbers = '+numbersJS+';';
-          html += 'var blocks = '+blocksJS+';';
-          html += 'var across = '+acrossJS+';';
-          html += 'var down = '+downJS+';';
-          html += 'var n = letters.length;';
-          html += 'var grid = document.getElementById("grid");';
-          html += 'for (var r=0;r<n;r++){ for (var c=0;c<n;c++){ var cell = document.createElement("div"); var isBlk = blocks[r][c]===1; cell.className = "cell" + (isBlk? " blk" : ""); if (!isBlk){ if (numbers[r][c]){ var num = document.createElement("div"); num.className="num"; num.textContent = numbers[r][c]; cell.appendChild(num);} var l = document.createElement("div"); l.className="ltr"; l.textContent = letters[r][c] || ""; cell.appendChild(l);} grid.appendChild(cell);} }';
-          html += 'function renderClues(list, host){ var frag = document.createDocumentFragment(); list.forEach(function(item){ var div = document.createElement("div"); div.className="clue"; div.textContent = item.number + ". " + item.clue; frag.appendChild(div); }); host.innerHTML=""; host.appendChild(frag);}';
-          html += 'renderClues(across, document.getElementById("ac"));';
-          html += 'renderClues(down, document.getElementById("dn"));';
-          html += 'document.getElementById("ans").addEventListener("change", function(e){ document.body.classList.toggle("answers-off", !e.target.checked); });';
-          html += '</' + 'script>';
-          html += '</body></html>';
-
-          w.document.write(html);
-          w.document.close();
-          w.focus();
-        }catch(e){
-          alert('Unable to open print preview: '+ (e && e.message ? e.message : e));
-        }
-      }
-
-
-
       // Trigger congrats when puzzle fully solved
       useEffect(()=>{
         const allPlacements = (across || []).concat(down || []);
@@ -1201,19 +1031,6 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
       }
 
       const handleCellClick = (r,c,isCell,id)=>{
-        // Mobile double‑tap: flip direction if tapping same cell twice quickly
-        if (isMobile && !revealMode) {
-          const now = Date.now();
-          const last = lastTapRef.current || { t:0, r:-1, c:-1 };
-          if ((now - last.t) < 300 && last.r === r && last.c === c) {
-            setDir(d => d === DIRS.ACROSS ? DIRS.DOWN : DIRS.ACROSS);
-            lastTapRef.current = { t: 0, r: -1, c: -1 };
-            // Keep selection; bail out so we don't also run place/reveal
-            return;
-          }
-          lastTapRef.current = { t: now, r, c };
-        }
-    
         if (!isCell) return;
         if (revealMode){
           const letter = grid[r][c];
@@ -1326,6 +1143,8 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
                     </div>
                   )}
                 </div>
+
+    
                 <div className="actions">
                   <button className="btn" onClick={()=>setShowOptions(false)}>Cancel</button>
                   <button className="btn" onClick={()=>{
@@ -1401,8 +1220,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
 
                 <div className="btnrow">
                   <button id="revealBtn" className={'btn reveal' + (revealMode ? ' active' : '')} onClick={()=>{ setRevealMode(true); }} aria-pressed={revealMode}>Reveal</button>
-                  <button id="todayBtn" className="btn" onClick={()=>{ setPracticeWords(null); setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(defaultDailySeed()); }}>Today</button>
-                  <button id="randBtn" className="btn" onClick={()=>{ setPracticeWords(null); setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setSeed(newRandomSeed()); }}>Random</button>
+                  <button id="newBtn" className="btn" onClick={()=>{ setRevealMode(false); setActive(null); setDir(DIRS.ACROSS); setPracticeWords(null); setSeed(newRandomSeed()); }}>New Puzzle</button>
                   <button id="optBtn" className="btn" onClick={()=>{ setSeedInput(String(seed)); setShowOptions(true); }}>Options</button>
                 
           
