@@ -1202,7 +1202,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
               <div key={id} className={'cell ' + (isCell? 'open':'block') + (isActive?' active':'') + (isLocked?' locked':'') + (isRevealed?' revealed':'') + (isInWord? ' inword':'')}
                    onClick={()=>handleCellClick(r,c,isCell,id)}>
                 {isCell && num ? <div className="num">{num}</div> : null}
-                {isCell ? <span style={{ color: isRevealed? '#4c1d95' : (isLocked? '#7c5c00' : '#111111') }}>{showLetter}</span> : null}
+                {isCell ? <span style={{ color: isRevealed? '#4c1d95' : (isLocked? '#7c5c00' : '#111111'), fontSize: Math.max(10, Math.floor(cellPx*0.62)), lineHeight: 1, display:'inline-block' }}>{showLetter}</span> : null}
               </div>
             );
           }
