@@ -10,20 +10,6 @@
     :root { color-scheme: light; }
 
     *, *::before, *::after { box-sizing: border-box; }
-    /* Allow grid items to shrink; prevents horizontal overflow from wide children */
-    .two > div, .card, .gridwrap { min-width: 0; }
-
-    /* Force 1-column layout whenever mobile is detected (in addition to media query) */
-    html.is-mobile .two { grid-template-columns: 1fr !important; gap: 14px !important; }
-
-    /* Fit-to-viewport scaler (mobile fallback): applied only when content would overflow */
-    :root { --app-scale: 1; }
-    #appwrap.fit-scale{
-      transform: scale(var(--app-scale));
-      transform-origin: 0 0;
-      width: calc(100% / var(--app-scale));
-    }
-
     html, body { margin: 0; padding: 0; background: #ffffff; color: #111111; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
     .container { max-width: 1120px; margin: 0 auto; padding: 16px; }
     .card { border: 2px solid #000; border-radius: 12px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); box-sizing: border-box; max-width: 100%; }
@@ -114,7 +100,7 @@
 }
 
 /* ---------------- Mobile layout & scaling ---------------- */
-html.is-mobile, body.is-mobile { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+html.is-mobile, body.is-mobile { overflow-x: hidden; }
 @media (max-width: 900px){
   .container { max-width: 100%; padding: 10px; padding-left: calc(10px + env(safe-area-inset-left)); padding-right: calc(10px + env(safe-area-inset-right)); }
   .title { font-size: 22px; text-align: center; }
@@ -839,44 +825,6 @@ const result = useMemo(()=>{
           window.removeEventListener('orientationchange', on);
         };
       },[]);
-
-      // Mobile overflow fallback: if anything still overflows horizontally, scale the app down slightly.
-      const applyFitScale = React.useCallback(()=>{
-        try{
-          const wrap = document.getElementById('appwrap');
-          if (!wrap) return;
-
-          // Reset first
-          wrap.classList.remove('fit-scale');
-          document.documentElement.style.setProperty('--app-scale', '1');
-          if (!isMobile) return;
-
-          // Measure after reset
-          const vw = Math.max(240, (document.documentElement && document.documentElement.clientWidth) ? document.documentElement.clientWidth : (window.innerWidth || 360));
-          const contentW = Math.max(wrap.scrollWidth || 0, Math.ceil(wrap.getBoundingClientRect().width || 0));
-
-          if (contentW > vw + 1){
-            let s = vw / contentW;
-            // Typical overflows only need a small shrink; avoid making the UI unreadably tiny.
-            s = Math.max(0.78, Math.min(1, s));
-            document.documentElement.style.setProperty('--app-scale', String(s));
-            wrap.classList.add('fit-scale');
-          }
-        }catch(_){}
-      }, [isMobile]);
-
-      const scheduleFitScale = React.useCallback(()=>{
-        try{
-          requestAnimationFrame(()=>applyFitScale());
-          setTimeout(()=>applyFitScale(), 30);
-          setTimeout(()=>applyFitScale(), 140);
-        }catch(_){}
-      }, [applyFitScale]);
-
-      useEffect(()=>{
-        scheduleFitScale();
-      }, [isMobile, scheduleFitScale]);
-
 useEffect(()=>{
         if (showCongrats) startConfetti();
         else stopConfetti();
@@ -940,16 +888,15 @@ useEffect(()=>{
           const availH=Math.max(140, Math.floor(vh-rect.top-footerBuffer));
           setAvailableHeight(availH);
           const innerH=Math.max(120, Math.floor(availH - padT - padB));
-          const px=Math.max(10, Math.min(Math.floor((innerW-2)/cols), Math.floor((innerH-2)/rows)));
+          const px=Math.max(10, Math.min(Math.floor(innerW/cols), Math.floor(innerH/rows)));
           setCellPx(px);
-          try{ if (isMobile) { requestAnimationFrame(()=>applyFitScale()); } }catch(_){ }
         };
         recalc();
         var ro=null;
         try{ ro=new ResizeObserver(()=>recalc()); if (wrapRef.current) ro.observe(wrapRef.current); }catch(e){}
         window.addEventListener('resize', recalc);
         return ()=>{ try{ if (ro){ ro.disconnect(); } }catch(e){} window.removeEventListener('resize', recalc); };
-      },[cols,rows,isMobile,applyFitScale]);
+      },[cols,rows]);
 
       function within(r,c){ return r>=bounds.minR && r<=bounds.maxR && c>=bounds.minC && c<=bounds.maxC; }
       function isLetterCell(r,c){ return within(r,c) && grid[r][c]!==null; }
@@ -1398,7 +1345,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
 
       const showStatus = loading || error || !bank.length;
       return (
-        <div id="appwrap">
+        <>
           <header className="title"><div>Neurology Crossword Puzzler</div><div></div></header>
           <input
             ref={hiddenInputRef}
@@ -1407,6 +1354,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
             autoCapitalize="characters"
             autoCorrect="off"
             spellCheck={false}
+            aria-hidden="true"
             onInput={(e)=>{
               const el=e.currentTarget;
               const v=el.value||'';
@@ -1575,7 +1523,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
               </div>
 </div>
           )}
-</div>
+</>
       );
     }
 

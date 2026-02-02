@@ -8,26 +8,10 @@
   .confettiCanvas{position:fixed;inset:0;pointer-events:none;z-index:10050}
 
     :root { color-scheme: light; }
-
-    *, *::before, *::after { box-sizing: border-box; }
-    /* Allow grid items to shrink; prevents horizontal overflow from wide children */
-    .two > div, .card, .gridwrap { min-width: 0; }
-
-    /* Force 1-column layout whenever mobile is detected (in addition to media query) */
-    html.is-mobile .two { grid-template-columns: 1fr !important; gap: 14px !important; }
-
-    /* Fit-to-viewport scaler (mobile fallback): applied only when content would overflow */
-    :root { --app-scale: 1; }
-    #appwrap.fit-scale{
-      transform: scale(var(--app-scale));
-      transform-origin: 0 0;
-      width: calc(100% / var(--app-scale));
-    }
-
     html, body { margin: 0; padding: 0; background: #ffffff; color: #111111; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
     .container { max-width: 1120px; margin: 0 auto; padding: 16px; }
-    .card { border: 2px solid #000; border-radius: 12px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); box-sizing: border-box; max-width: 100%; }
-    .gridwrap { padding: 8px; display: flex; justify-content: center; align-items: center; width: 100%; box-sizing: border-box; max-width: 100%; }
+    .card { border: 2px solid #000; border-radius: 12px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    .gridwrap { padding: 8px; display: flex; justify-content: center; align-items: center; width: 100%; box-sizing: border-box; }
     .cluecard { padding: 6px; }
     .title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; font-family: "Courier New", Courier, monospace; }
     .reveal-cursor, .reveal-cursor * { cursor: help !important; }
@@ -53,11 +37,10 @@
     #errOverlay { position: fixed; inset: 0; background: rgba(255,255,255,.96); color:#111; padding: 16px; z-index: 99999; display:none; }
     #errOverlay pre { white-space: pre-wrap; word-break: break-word; }
     .cluelist { list-style: none; margin: 0; padding: 0; padding-left: 0; }
-    .cluecard, .cluelist { max-width: 100%; }
-    .clue { display:flex; align-items:flex-start; gap:6px; padding:1px 0; border-bottom: 1px dotted #ddd; line-height:1.15; min-width: 0; max-width: 100%; }
+    .clue { display:flex; align-items:flex-start; gap:6px; padding:1px 0; border-bottom: 1px dotted #ddd; line-height:1.15; }
     .clue:last-child { border-bottom: none; }
     .clue-num { font-weight: 700; width: 2.2ch; text-align: right; }
-    .clue-text { flex: 1; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+    .clue-text { flex: 1; }
     /* Modal */
     .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index: 10000; }
     .modal { background:#fff; border:2px solid #000; border-radius:12px; width: 320px; max-width: 90vw; padding:16px; box-shadow: 0 10px 30px rgba(0,0,0,.2); }
@@ -114,13 +97,13 @@
 }
 
 /* ---------------- Mobile layout & scaling ---------------- */
-html.is-mobile, body.is-mobile { overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+html.is-mobile, body.is-mobile { overflow-x: hidden; }
 @media (max-width: 900px){
   .container { max-width: 100%; padding: 10px; padding-left: calc(10px + env(safe-area-inset-left)); padding-right: calc(10px + env(safe-area-inset-right)); }
   .title { font-size: 22px; text-align: center; }
   .two { grid-template-columns: 1fr !important; gap: 14px !important; }
   .sticky-grid { position: static !important; top: auto !important; }
-  .gridwrap { padding: 4px; }
+  .gridwrap { padding: 6px; }
   .btnrow { gap: 8px; margin-top: 10px; }
   .btn { padding: .5rem .8rem; border-radius: .65rem; }
   .cluecard { padding: 10px; }
@@ -839,44 +822,6 @@ const result = useMemo(()=>{
           window.removeEventListener('orientationchange', on);
         };
       },[]);
-
-      // Mobile overflow fallback: if anything still overflows horizontally, scale the app down slightly.
-      const applyFitScale = React.useCallback(()=>{
-        try{
-          const wrap = document.getElementById('appwrap');
-          if (!wrap) return;
-
-          // Reset first
-          wrap.classList.remove('fit-scale');
-          document.documentElement.style.setProperty('--app-scale', '1');
-          if (!isMobile) return;
-
-          // Measure after reset
-          const vw = Math.max(240, (document.documentElement && document.documentElement.clientWidth) ? document.documentElement.clientWidth : (window.innerWidth || 360));
-          const contentW = Math.max(wrap.scrollWidth || 0, Math.ceil(wrap.getBoundingClientRect().width || 0));
-
-          if (contentW > vw + 1){
-            let s = vw / contentW;
-            // Typical overflows only need a small shrink; avoid making the UI unreadably tiny.
-            s = Math.max(0.78, Math.min(1, s));
-            document.documentElement.style.setProperty('--app-scale', String(s));
-            wrap.classList.add('fit-scale');
-          }
-        }catch(_){}
-      }, [isMobile]);
-
-      const scheduleFitScale = React.useCallback(()=>{
-        try{
-          requestAnimationFrame(()=>applyFitScale());
-          setTimeout(()=>applyFitScale(), 30);
-          setTimeout(()=>applyFitScale(), 140);
-        }catch(_){}
-      }, [applyFitScale]);
-
-      useEffect(()=>{
-        scheduleFitScale();
-      }, [isMobile, scheduleFitScale]);
-
 useEffect(()=>{
         if (showCongrats) startConfetti();
         else stopConfetti();
@@ -923,33 +868,21 @@ useEffect(()=>{
       useEffect(()=>{
         const recalc=()=>{
           if (!wrapRef.current) return;
-          const el=wrapRef.current;
-          const w=el.clientWidth||320;
-          let padL=0,padR=0,padT=0,padB=0;
-          try{
-            const cs=window.getComputedStyle(el);
-            padL=parseFloat(cs.paddingLeft)||0;
-            padR=parseFloat(cs.paddingRight)||0;
-            padT=parseFloat(cs.paddingTop)||0;
-            padB=parseFloat(cs.paddingBottom)||0;
-          }catch(_){}
-          const innerW=Math.max(120, Math.floor(w - padL - padR));
+          const w=wrapRef.current.clientWidth||320;
           const rect=wrapRef.current.getBoundingClientRect();
           const vh=window.innerHeight||800;
           const footerBuffer=80;
           const availH=Math.max(140, Math.floor(vh-rect.top-footerBuffer));
           setAvailableHeight(availH);
-          const innerH=Math.max(120, Math.floor(availH - padT - padB));
-          const px=Math.max(10, Math.min(Math.floor((innerW-2)/cols), Math.floor((innerH-2)/rows)));
+          const px=Math.max(12, Math.min(Math.floor(w/cols), Math.floor(availH/rows)));
           setCellPx(px);
-          try{ if (isMobile) { requestAnimationFrame(()=>applyFitScale()); } }catch(_){ }
         };
         recalc();
         var ro=null;
         try{ ro=new ResizeObserver(()=>recalc()); if (wrapRef.current) ro.observe(wrapRef.current); }catch(e){}
         window.addEventListener('resize', recalc);
         return ()=>{ try{ if (ro){ ro.disconnect(); } }catch(e){} window.removeEventListener('resize', recalc); };
-      },[cols,rows,isMobile,applyFitScale]);
+      },[cols,rows]);
 
       function within(r,c){ return r>=bounds.minR && r<=bounds.maxR && c>=bounds.minC && c<=bounds.maxC; }
       function isLetterCell(r,c){ return within(r,c) && grid[r][c]!==null; }
@@ -1398,7 +1331,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
 
       const showStatus = loading || error || !bank.length;
       return (
-        <div id="appwrap">
+        <>
           <header className="title"><div>Neurology Crossword Puzzler</div><div></div></header>
           <input
             ref={hiddenInputRef}
@@ -1407,6 +1340,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
             autoCapitalize="characters"
             autoCorrect="off"
             spellCheck={false}
+            aria-hidden="true"
             onInput={(e)=>{
               const el=e.currentTarget;
               const v=el.value||'';
@@ -1575,7 +1509,7 @@ const showLetter = (userGrid[r] && typeof userGrid[r][c] !== 'undefined') ? user
               </div>
 </div>
           )}
-</div>
+</>
       );
     }
 
