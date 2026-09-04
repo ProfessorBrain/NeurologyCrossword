@@ -137,9 +137,9 @@ html.is-mobile, body.is-mobile { overflow-x: auto; -webkit-overflow-scrolling: t
   <div id="root" class="container"></div>
   <div id="errOverlay"><h2>Runtime error</h2><pre id="errMsg"></pre></div>
 
-  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.28.4/babel.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <script>
     (function(){
@@ -154,7 +154,7 @@ html.is-mobile, body.is-mobile { overflow-x: auto; -webkit-overflow-scrolling: t
     })();
   </script>
 
-  <script type="text/babel" data-presets="react">
+  <script type="text/babel" data-presets="env,react">
     const { useEffect, useMemo, useRef, useState } = React;
 
     // ---------- RNG & helpers ----------
