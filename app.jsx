@@ -23,6 +23,16 @@ function hashStringToInt(str) {
 function defaultDailySeed() {
   return hashStringToInt("phoenix" + phoenixYYYYMMDD());
 }
+
+const MIN_SIZE_LEVEL = 0;
+const MAX_SIZE_LEVEL = 14;
+
+function normalizeSizeLevel(value, fallback = 7) {
+  const level = Number(value);
+  if (!Number.isFinite(level)) return fallback;
+  return Math.max(MIN_SIZE_LEVEL, Math.min(MAX_SIZE_LEVEL, Math.round(level)));
+}
+
 function readQuery() {
   const q = new URLSearchParams(window.location.search);
   const seedRaw = q.get("seed");
@@ -36,14 +46,14 @@ function readQuery() {
   let level = null;
   if (levelRaw !== null) {
     const n = Number(levelRaw);
-    if (isFinite(n)) level = Math.max(0, Math.min(14, Math.round(n)));
+    if (Number.isFinite(n)) level = normalizeSizeLevel(n);
   }
   return { seed, level };
 }
 function writeQuery(seed, level, replace = true) {
   const url = new URL(window.location.href);
   url.searchParams.set("seed", String(seed >>> 0));
-  url.searchParams.set("level", String(level));
+  url.searchParams.set("level", String(normalizeSizeLevel(level)));
   if (replace) history.replaceState(null, "", url);
   else history.pushState(null, "", url);
 }
@@ -264,11 +274,9 @@ function presetFor(levelOrOpt) {
   if (typeof levelOrOpt === "string") {
     return LEGACY[levelOrOpt] || LEGACY.medium;
   }
-  let lvl = Number(levelOrOpt);
-  if (!isFinite(lvl)) lvl = 7;
-  lvl = Math.max(0, Math.min(14, Math.round(lvl)));
+  const lvl = normalizeSizeLevel(levelOrOpt);
   const lerp = (a, b, t) => a + (b - a) * t;
-  const t = lvl / 14;
+  const t = lvl / MAX_SIZE_LEVEL;
   const base = Math.round(lerp(13, 35, t));
   const maxLen = Math.round(lerp(8, 35, t));
   const maxClues = Math.round(lerp(10, 20, t));
@@ -1609,13 +1617,38 @@ function App() {
                 <input
                   id="sizeSlider"
                   type="range"
-                  min={0}
-                  max={14}
+                  min={MIN_SIZE_LEVEL}
+                  max={MAX_SIZE_LEVEL}
                   step={1}
                   value={sizeInput}
-                  onChange={(e) => setSizeInput(Number(e.target.value))}
+                  aria-valuetext={`Swag ${sizeInput} of ${MAX_SIZE_LEVEL}`}
+                  onInput={(e) =>
+                    setSizeInput(normalizeSizeLevel(e.currentTarget.value))
+                  }
                   className="slider"
                 />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    fontSize: "12px",
+                    marginTop: "2px",
+                  }}
+                >
+                  <span aria-hidden="true">{MIN_SIZE_LEVEL}</span>
+                  <output
+                    htmlFor="sizeSlider"
+                    aria-live="polite"
+                    style={{
+                      fontWeight: 700,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {sizeInput}
+                  </output>
+                  <span aria-hidden="true">{MAX_SIZE_LEVEL}</span>
+                </div>
               </div>
             </div>
 
@@ -1688,7 +1721,7 @@ function App() {
                     }
                   }
                   setShowOptions(false);
-                  setSizeLevel(sizeInput);
+                  setSizeLevel(normalizeSizeLevel(sizeInput));
                   if (newS !== null) setSeed(newS);
                 }}
               >
