@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { createRoot } from "react-dom/client";
 
 // ---------- RNG & helpers ----------
@@ -671,6 +677,93 @@ function fireConfetti(count) {
   }, 1100);
 }
 
+// Score a generated grid once so both the normal puzzle and live size preview
+// use the same selection logic without duplicating the expensive bookkeeping.
+function symmetryMismatches(resultOrGrid) {
+  const grid = resultOrGrid?.grid || resultOrGrid;
+  if (!grid?.length) return 0;
+  const rows = grid.length;
+  const cols = grid[0].length;
+  let mismatches = 0;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const mirrorR = rows - 1 - r;
+      const mirrorC = cols - 1 - c;
+      if (r > mirrorR || (r === mirrorR && c > mirrorC)) continue;
+      if ((grid[r][c] !== null) !== (grid[mirrorR][mirrorC] !== null)) {
+        mismatches++;
+      }
+    }
+  }
+  return mismatches;
+}
+
+function scoreCrossword(result) {
+  const counts = result.grid.map((row) => row.map(() => 0));
+  for (const placement of result.placements) {
+    for (let i = 0; i < placement.answer.length; i++) {
+      const r =
+        placement.dir === DIRS.ACROSS ? placement.row : placement.row + i;
+      const c =
+        placement.dir === DIRS.ACROSS ? placement.col + i : placement.col;
+      if (counts[r]?.[c] !== undefined) counts[r][c]++;
+    }
+  }
+
+  let crosses = 0;
+  for (const row of counts) {
+    for (const count of row) if (count > 1) crosses++;
+  }
+  return (
+    result.placements.length * 10 + crosses - symmetryMismatches(result) * 8
+  );
+}
+
+function buildBestCrossword(words, seed, size, minPlaced, emptyResult) {
+  try {
+    if (!words.length) return emptyResult;
+    let best = null;
+    const MAX_SALTS = 200;
+
+    for (let salt = 0; salt < MAX_SALTS; salt++) {
+      const result = generateCrosswordFromWords(words, seed + salt, size);
+      const score = scoreCrossword(result);
+      if (!best || score > best.score) best = { ...result, score };
+      if (result.placements.length >= minPlaced) return result;
+    }
+
+    // A smaller fallback can produce a denser, better-connected layout.
+    const threshold = minPlaced * 10;
+    if (best && best.score < threshold && size > 13) {
+      const smallerSize = Math.max(13, size - 2);
+      let bestSmall = null;
+      for (let salt = 0; salt < 120; salt++) {
+        const result = generateCrosswordFromWords(
+          words,
+          seed + salt,
+          smallerSize,
+        );
+        const score = scoreCrossword(result);
+        if (!bestSmall || score > bestSmall.score) {
+          bestSmall = { ...result, score };
+        }
+        if (
+          result.placements.length >= minPlaced &&
+          symmetryMismatches(result) === 0
+        ) {
+          break;
+        }
+      }
+      if (bestSmall && bestSmall.score > best.score) return bestSmall;
+    }
+
+    return best || generateCrosswordFromWords(words, seed, size);
+  } catch (error) {
+    console.error("crossword generation failed", error);
+    return emptyResult;
+  }
+}
+
 function App() {
   const { bank, loading, error } = useClueBank();
   const initialQuery = useMemo(() => readQuery(), []);
@@ -680,25 +773,29 @@ function App() {
   const [seed, setSeed] = useState(() =>
     initialQuery.seed !== null ? initialQuery.seed >>> 0 : defaultDailySeed(),
   );
+  const [showOptions, setShowOptions] = useState(false);
+  const [seedInput, setSeedInput] = useState("");
+  const [sizeInput, setSizeInput] = useState(sizeLevel);
+  const [previewSizeLevel, setPreviewSizeLevel] = useState(sizeLevel);
+  const [isSizePreviewPending, startSizePreview] = useTransition();
   useEffect(() => {
     try {
       writeQuery(seed, sizeLevel, true);
     } catch (_) {}
   }, [seed, sizeLevel]);
+  const sizePreset = useMemo(() => presetFor(sizeLevel), [sizeLevel]);
   const words = useMemo(
     () =>
-      bank.length
-        ? pickDailyWords(bank, mulberry32(seed), presetFor(sizeLevel))
-        : [],
-    [bank, seed, sizeLevel],
+      bank.length ? pickDailyWords(bank, mulberry32(seed), sizePreset) : [],
+    [bank, seed, sizePreset],
   );
   const size = useMemo(
     () =>
       computeGridSize(
         words.length ? words : [{ answer: "PLACEHOLDER", clue: "" }],
-        presetFor(sizeLevel),
+        sizePreset,
       ),
-    [words, sizeLevel],
+    [words, sizePreset],
   );
 
   const emptySize = Math.max(13, Math.min(35, size || 15));
@@ -714,103 +811,62 @@ function App() {
     [emptySize],
   );
 
-  // Symmetry helper: 180° rotational symmetry mismatches (block vs letter)
-  function symmetryMismatches(g) {
-    try {
-      const grid = g && g.grid ? g.grid : g;
-      if (!grid || !grid.length) return 0;
-      const n = grid.length,
-        m = grid[0].length;
-      let mismatches = 0;
-      for (let r = 0; r < n; r++) {
-        for (let c = 0; c < m; c++) {
-          const mr = n - 1 - r,
-            mc = m - 1 - c;
-          if (r > mr || (r === mr && c > mc)) continue; // count pairs once
-          const a = grid[r][c] !== null;
-          const b = grid[mr][mc] !== null;
-          if (a !== b) mismatches++;
-        }
-      }
-      return mismatches;
-    } catch (_) {
-      return 0;
-    }
-  }
+  const result = useMemo(
+    () =>
+      buildBestCrossword(words, seed, size, sizePreset.minPlaced, emptyResult),
+    [words, seed, size, sizePreset, emptyResult],
+  );
 
-  const result = useMemo(() => {
-    try {
-      if (!words.length) return emptyResult;
-      let best = null;
-      const MAX_SALTS = 200,
-        MIN_WORDS = presetFor(sizeLevel).minPlaced;
-      for (let salt = 0; salt < MAX_SALTS; salt++) {
-        const g = generateCrosswordFromWords(words, seed + salt, size);
-        const placed = g.placements.length;
-        const H = g.grid.length,
-          W = g.grid[0].length;
-        const counts = Array.from({ length: H }, () => Array(W).fill(0));
-        for (let pIndex = 0; pIndex < g.placements.length; pIndex++) {
-          const p = g.placements[pIndex];
-          for (let i = 0; i < p.answer.length; i++) {
-            const r = p.dir === DIRS.ACROSS ? p.row : p.row + i,
-              c = p.dir === DIRS.ACROSS ? p.col + i : p.col;
-            if (r >= 0 && r < H && c >= 0 && c < W) counts[r][c] += 1;
-          }
-        }
-        let crosses = 0;
-        for (let r = 0; r < H; r++)
-          for (let c = 0; c < W; c++) if (counts[r][c] > 1) crosses++;
-        const sym = symmetryMismatches(g);
-        const score = placed * 10 + crosses - sym * 8;
-        if (!best || score > best.score) best = { ...g, score };
-        if (placed >= MIN_WORDS) return g;
-      }
-      // Fallback: if score low, retry at a slightly smaller base and prefer better layout
-      const threshold = presetFor(sizeLevel).minPlaced * 10;
-      if (best && best.score < threshold && size > 13) {
-        const smaller = Math.max(13, size - 2);
-        let bestSmall = null;
-        for (let s2 = 0; s2 < 120; s2++) {
-          const g2 = generateCrosswordFromWords(words, seed + s2, smaller);
-          const placed2 = g2.placements.length;
-          const H2 = g2.grid.length,
-            W2 = g2.grid[0].length;
-          const counts2 = Array.from({ length: H2 }, () => Array(W2).fill(0));
-          for (let pIndex = 0; pIndex < g2.placements.length; pIndex++) {
-            const p2 = g2.placements[pIndex];
-            for (let i2 = 0; i2 < p2.answer.length; i2++) {
-              const rr = p2.dir === DIRS.ACROSS ? p2.row : p2.row + i2,
-                cc = p2.dir === DIRS.ACROSS ? p2.col + i2 : p2.col;
-              if (rr >= 0 && rr < H2 && cc >= 0 && cc < W2)
-                counts2[rr][cc] += 1;
-            }
-          }
-          let crosses2 = 0;
-          for (let r = 0; r < H2; r++)
-            for (let c = 0; c < W2; c++) if (counts2[r][c] > 1) crosses2++;
-          const sym2 = symmetryMismatches(g2);
-          const score2 = placed2 * 10 + crosses2 - sym2 * 8;
-          if (!bestSmall || score2 > bestSmall.score)
-            bestSmall = { ...g2, score: score2 };
-          if (placed2 >= MIN_WORDS && sym2 === 0) {
-            bestSmall = { ...g2, score: score2 };
-            break;
-          }
-        }
-        if (bestSmall && bestSmall.score > best.score) return bestSmall;
-      }
-      return best || generateCrosswordFromWords(words, seed, size);
-    } catch (e) {
-      console.error("result memo failed", e);
-      return emptyResult;
-    }
-  }, [words, seed, size, emptyResult]);
+  const isPreviewingSize =
+    showOptions && previewSizeLevel !== sizeLevel && bank.length > 0;
+  const previewPreset = useMemo(
+    () => presetFor(previewSizeLevel),
+    [previewSizeLevel],
+  );
+  const previewWords = useMemo(
+    () =>
+      isPreviewingSize
+        ? pickDailyWords(bank, mulberry32(seed), previewPreset)
+        : [],
+    [bank, seed, previewPreset, isPreviewingSize],
+  );
+  const previewSize = useMemo(
+    () =>
+      isPreviewingSize
+        ? computeGridSize(previewWords, previewPreset)
+        : emptySize,
+    [isPreviewingSize, previewWords, previewPreset, emptySize],
+  );
+  const previewResult = useMemo(
+    () =>
+      isPreviewingSize
+        ? buildBestCrossword(
+            previewWords,
+            seed,
+            previewSize,
+            previewPreset.minPlaced,
+            emptyResult,
+          )
+        : null,
+    [
+      isPreviewingSize,
+      previewWords,
+      seed,
+      previewSize,
+      previewPreset,
+      emptyResult,
+    ],
+  );
 
   const grid = result.grid,
     placements = result.placements,
     numbers = result.numbers,
     bounds = result.bounds;
+  const displayResult = previewResult || result;
+  const displayGrid = displayResult.grid;
+  const displayPlacements = displayResult.placements;
+  const displayNumbers = displayResult.numbers;
+  const displayBounds = displayResult.bounds;
 
   const [userGrid, setUserGrid] = useState(
     grid.map((row) => row.map((x) => (x ? "" : null))),
@@ -934,9 +990,6 @@ function App() {
     return stopConfetti;
   }, [showCongrats]);
 
-  const [showOptions, setShowOptions] = useState(false);
-  const [seedInput, setSeedInput] = useState("");
-  const [sizeInput, setSizeInput] = useState(sizeLevel);
   const [revealed, setRevealed] = useState(new Set());
   const [pendingResume, setPendingResume] = useState(null);
   const [resumeChecked, setResumeChecked] = useState(false);
@@ -991,8 +1044,8 @@ function App() {
 
   const wrapRef = useRef(null);
   const [cellPx, setCellPx] = useState(24);
-  const cols = Math.max(1, bounds.maxC - bounds.minC + 1),
-    rows = Math.max(1, bounds.maxR - bounds.minR + 1);
+  const cols = Math.max(1, displayBounds.maxC - displayBounds.minC + 1),
+    rows = Math.max(1, displayBounds.maxR - displayBounds.minR + 1);
   const [availableHeight, setAvailableHeight] = useState(400);
   useEffect(() => {
     const recalc = () => {
@@ -1171,7 +1224,11 @@ function App() {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape") {
-        if (showOptions) setShowOptions(false);
+        if (showOptions) {
+          setShowOptions(false);
+          setSizeInput(sizeLevel);
+          setPreviewSizeLevel(sizeLevel);
+        }
         if (revealMode) setRevealMode(false);
         return;
       }
@@ -1236,7 +1293,17 @@ function App() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [active, dir, grid, locked, revealMode, revealed, showOptions, userGrid]);
+  }, [
+    active,
+    dir,
+    grid,
+    locked,
+    revealMode,
+    revealed,
+    showOptions,
+    sizeLevel,
+    userGrid,
+  ]);
 
   useEffect(() => {
     if (!pendingResume || loading || !bank.length || !placements.length) return;
@@ -1331,6 +1398,22 @@ function App() {
         .sort((a, b) => a.number - b.number),
     [placements],
   );
+  const displayAcross = useMemo(
+    () =>
+      displayPlacements
+        .filter((p) => p.dir === DIRS.ACROSS)
+        .slice()
+        .sort((a, b) => a.number - b.number),
+    [displayPlacements],
+  );
+  const displayDown = useMemo(
+    () =>
+      displayPlacements
+        .filter((p) => p.dir === DIRS.DOWN)
+        .slice()
+        .sort((a, b) => a.number - b.number),
+    [displayPlacements],
+  );
 
   // Compute the set of words that were missed (revealed or ever incorrect) at any point
   function getMissedPlacements() {
@@ -1424,32 +1507,36 @@ function App() {
   }, [userGrid, across, down]);
   function renderCells() {
     const items = [];
-    const R = bounds.maxR - bounds.minR + 1;
-    const C = bounds.maxC - bounds.minC + 1;
+    const R = displayBounds.maxR - displayBounds.minR + 1;
+    const C = displayBounds.maxC - displayBounds.minC + 1;
     for (let ri = 0; ri < R; ri++) {
-      const r = bounds.minR + ri;
+      const r = displayBounds.minR + ri;
       for (let ci = 0; ci < C; ci++) {
-        const c = bounds.minC + ci;
-        const letter = grid[r][c];
+        const c = displayBounds.minC + ci;
+        const letter = displayGrid[r][c];
         const isCell = letter !== null;
         const id = cellKey(r, c);
-        const isLocked = locked.has(id);
-        const isActive = active && active.r === r && active.c === c;
-        const isRevealed = revealed.has(id);
+        const isLocked = !isPreviewingSize && locked.has(id);
+        const isActive =
+          !isPreviewingSize && active && active.r === r && active.c === c;
+        const isRevealed = !isPreviewingSize && revealed.has(id);
         const isInWord =
-          selectedPlacement && cellInPlacement(selectedPlacement, r, c);
-        const showLetter =
-          userGrid[r] && typeof userGrid[r][c] !== "undefined"
+          !isPreviewingSize &&
+          selectedPlacement &&
+          cellInPlacement(selectedPlacement, r, c);
+        const showLetter = isPreviewingSize
+          ? ""
+          : userGrid[r] && typeof userGrid[r][c] !== "undefined"
             ? userGrid[r][c]
             : "";
         var num = null;
         if (
-          numbers &&
-          numbers[r] &&
-          typeof numbers[r][c] !== "undefined" &&
-          numbers[r][c] !== null
+          displayNumbers &&
+          displayNumbers[r] &&
+          typeof displayNumbers[r][c] !== "undefined" &&
+          displayNumbers[r][c] !== null
         ) {
-          num = numbers[r][c];
+          num = displayNumbers[r][c];
         }
         items.push(
           <div
@@ -1462,7 +1549,11 @@ function App() {
               (isRevealed ? " revealed" : "") +
               (isInWord ? " inword" : "")
             }
-            onClick={() => handleCellClick(r, c, isCell, id)}
+            onClick={
+              isPreviewingSize
+                ? undefined
+                : () => handleCellClick(r, c, isCell, id)
+            }
           >
             {isCell && num ? <div className="num">{num}</div> : null}
             {isCell ? (
@@ -1541,6 +1632,12 @@ function App() {
     }
   };
 
+  const cancelOptions = () => {
+    setShowOptions(false);
+    setSizeInput(sizeLevel);
+    setPreviewSizeLevel(sizeLevel);
+  };
+
   const showStatus = loading || error || !bank.length;
   return (
     <div id="appwrap">
@@ -1594,7 +1691,7 @@ function App() {
         <div
           className="overlay"
           onClick={(e) => {
-            if (e.target === e.currentTarget) setShowOptions(false);
+            if (e.target === e.currentTarget) cancelOptions();
           }}
         >
           <div
@@ -1605,7 +1702,7 @@ function App() {
           >
             <h3>Options</h3>
             <div style={{ fontSize: "12px", opacity: 0.7, marginTop: "2px" }}>
-              version 0.4
+              version 0.5
             </div>
             <div className="row" style={{ alignItems: "center", gap: "12px" }}>
               <label htmlFor="sizeSlider">
@@ -1622,9 +1719,12 @@ function App() {
                   step={1}
                   value={sizeInput}
                   aria-valuetext={`Swag ${sizeInput} of ${MAX_SIZE_LEVEL}`}
-                  onInput={(e) =>
-                    setSizeInput(normalizeSizeLevel(e.currentTarget.value))
-                  }
+                  aria-busy={isSizePreviewPending}
+                  onInput={(e) => {
+                    const nextLevel = normalizeSizeLevel(e.currentTarget.value);
+                    setSizeInput(nextLevel);
+                    startSizePreview(() => setPreviewSizeLevel(nextLevel));
+                  }}
                   className="slider"
                 />
                 <div
@@ -1705,7 +1805,7 @@ function App() {
               )}
             </div>
             <div className="actions">
-              <button className="btn" onClick={() => setShowOptions(false)}>
+              <button className="btn" onClick={cancelOptions}>
                 Cancel
               </button>
               <button
@@ -1721,7 +1821,9 @@ function App() {
                     }
                   }
                   setShowOptions(false);
-                  setSizeLevel(normalizeSizeLevel(sizeInput));
+                  const nextLevel = normalizeSizeLevel(sizeInput);
+                  setPreviewSizeLevel(nextLevel);
+                  setSizeLevel(nextLevel);
                   if (newS !== null) setSeed(newS);
                 }}
               >
@@ -1757,11 +1859,12 @@ function App() {
               <div className="gridwrap" ref={wrapRef}>
                 <div
                   className="cells"
+                  aria-busy={isSizePreviewPending}
                   style={{
-                    gridTemplateColumns: `repeat(${Math.max(1, bounds.maxC - bounds.minC + 1)}, ${cellPx}px)`,
-                    gridTemplateRows: `repeat(${Math.max(1, bounds.maxR - bounds.minR + 1)}, ${cellPx}px)`,
-                    width: `${cellPx * Math.max(1, bounds.maxC - bounds.minC + 1)}px`,
-                    height: `${cellPx * Math.max(1, bounds.maxR - bounds.minR + 1)}px`,
+                    gridTemplateColumns: `repeat(${cols}, ${cellPx}px)`,
+                    gridTemplateRows: `repeat(${rows}, ${cellPx}px)`,
+                    width: `${cellPx * cols}px`,
+                    height: `${cellPx * rows}px`,
                   }}
                 >
                   {renderCells()}
@@ -1780,9 +1883,10 @@ function App() {
                   paddingRight: "6px",
                 }}
               >
-                {across.length ? (
-                  across.map((p) => {
+                {displayAcross.length ? (
+                  displayAcross.map((p) => {
                     const isSel =
+                      !isPreviewingSize &&
                       selectedPlacement &&
                       p.number === selectedPlacement.number &&
                       p.dir === selectedPlacement.dir;
@@ -1792,12 +1896,22 @@ function App() {
                         className={
                           "clue" +
                           (isSel ? " selected" : "") +
-                          (isPlacementCorrect(p, userGrid) ? " done" : "")
+                          (!isPreviewingSize && isPlacementCorrect(p, userGrid)
+                            ? " done"
+                            : "")
                         }
                         role="button"
                         tabIndex={0}
-                        onKeyDown={(event) => handlePlacementKeyDown(event, p)}
-                        onClick={() => handlePlacementSelect(p)}
+                        onKeyDown={
+                          isPreviewingSize
+                            ? undefined
+                            : (event) => handlePlacementKeyDown(event, p)
+                        }
+                        onClick={
+                          isPreviewingSize
+                            ? undefined
+                            : () => handlePlacementSelect(p)
+                        }
                       >
                         <span className="clue-num">{p.number}</span>
                         <span className="clue-text">{p.clue}</span>
@@ -1819,9 +1933,10 @@ function App() {
                   paddingRight: "6px",
                 }}
               >
-                {down.length ? (
-                  down.map((p) => {
+                {displayDown.length ? (
+                  displayDown.map((p) => {
                     const isSel =
+                      !isPreviewingSize &&
                       selectedPlacement &&
                       p.number === selectedPlacement.number &&
                       p.dir === selectedPlacement.dir;
@@ -1831,12 +1946,22 @@ function App() {
                         className={
                           "clue" +
                           (isSel ? " selected" : "") +
-                          (isPlacementCorrect(p, userGrid) ? " done" : "")
+                          (!isPreviewingSize && isPlacementCorrect(p, userGrid)
+                            ? " done"
+                            : "")
                         }
                         role="button"
                         tabIndex={0}
-                        onKeyDown={(event) => handlePlacementKeyDown(event, p)}
-                        onClick={() => handlePlacementSelect(p)}
+                        onKeyDown={
+                          isPreviewingSize
+                            ? undefined
+                            : (event) => handlePlacementKeyDown(event, p)
+                        }
+                        onClick={
+                          isPreviewingSize
+                            ? undefined
+                            : () => handlePlacementSelect(p)
+                        }
                       >
                         <span className="clue-num">{p.number}</span>
                         <span className="clue-text">{p.clue}</span>
@@ -1890,6 +2015,7 @@ function App() {
                 onClick={() => {
                   setSeedInput(String(seed));
                   setSizeInput(sizeLevel);
+                  setPreviewSizeLevel(sizeLevel);
                   setShowOptions(true);
                 }}
               >
